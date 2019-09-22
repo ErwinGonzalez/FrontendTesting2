@@ -5,6 +5,7 @@ import { tap, map, filter } from "rxjs/operators";
 import { HttpClient } from  "@angular/common/http";
 
 import InfoRequest from '../InfoRequest'
+import { InforequestService } from '../inforequest.service';
 
 class Request{
   constructor(private id:string, private url:string, private datetime:string){}
@@ -22,7 +23,7 @@ export class InfoRequestComponent implements OnInit {
   requestsObservable : Observable<Request[]>;
   apiAdd: "http://localhost:3000/";
 
-  constructor(private fb: FormBuilder, private httpClient: HttpClient) {
+  constructor(private fb: FormBuilder, private httpClient: HttpClient, private irService: InforequestService) {
     this.createForm();
   }
 
@@ -46,12 +47,19 @@ export class InfoRequestComponent implements OnInit {
     this.httpClient.post("http://127.0.0.1:3000/inforequests", request).subscribe(
       response => {
         console.log('POST Request is successful ', response);
+        
+        var stringResponse = JSON.stringify(response);
+        var obj =JSON.parse(stringResponse);
+        
+        this.irService.addRequest(obj.id,obj.url,obj.datetime);
         this.updateList();
       },
       error => {
         console.log('Error', error);
       }
     );
+
+    //this.irService.addRequest(id,url,datetime);
   }
 
   getDate():string{

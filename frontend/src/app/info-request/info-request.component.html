@@ -28,9 +28,9 @@
         <div class="form-group">
           <button (click) = "sendPostRequest(FrontendID.value,FrontendIP.value,RequestDateTime.value)"
           type="submit" class="btn btn-primary"
-
+          [disabled] = "angForm.pristine || angForm.invalid"
           >Request Info</button>
-          <!--[disabled] = "angForm.pristine || angForm.invalid"-->
+          
         </div>
       </form>
     </div>
