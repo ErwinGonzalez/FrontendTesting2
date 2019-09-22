@@ -1,0 +1,50 @@
+<div class="card">
+    <div class="card-body">
+      <form [formGroup]="angForm" novalidate>
+        <div *ngIf="angForm.controls['FrontendID'].invalid && (angForm.controls['FrontendID'].dirty || angForm.controls['FrontendID'].touched)" class="alert alert-danger">
+            <div *ngIf="angForm.controls['FrontendID'].errors.required">
+                Frontend ID Value Required
+            </div>
+            
+        </div>
+        <div class="form-group">
+          <label class="col-md-4">Frontend ID</label>
+          <input type="text" class="form-control"
+           formControlName="FrontendID"
+           #FrontendID />
+        </div>
+        <div class="form-group">
+          <label class="col-md-4">Frontend URL </label>
+          <input type="text" class="form-control" 
+          formControlName="FrontendIP"
+          #FrontendIP/>
+        </div>
+        <div class="form-group">
+          <label class="col-md-4">Request DateTime</label>
+          <input type="text" class="form-control" 
+          formControlName="RequestDateTime"
+          #RequestDateTime/>
+        </div>
+        <div class="form-group">
+          <button (click) = "sendPostRequest(FrontendID.value,FrontendIP.value,RequestDateTime.value)"
+          type="submit" class="btn btn-primary"
+
+          >Request Info</button>
+          <!--[disabled] = "angForm.pristine || angForm.invalid"-->
+        </div>
+      </form>
+    </div>
+  </div>
+  <div>
+    <ul *ngIf="requestsObservable | async as requests else empty">
+
+        <li *ngFor="let request of requests">
+            {{request.id}}
+        
+        
+        </li>
+        
+        </ul>
+        
+        <ng-template #empty> No Customers Yet </ng-template>
+  </div>
