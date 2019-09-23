@@ -1,0 +1,82 @@
+<div class="card">
+    <div class="card-body">
+        <form [formGroup]="angForm" novalidate>
+            <div *ngIf="angForm.controls['FrontendID'].invalid && (angForm.controls['FrontendID'].dirty || angForm.controls['FrontendID'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="angForm.controls['FrontendID'].errors.required">
+                    Frontend ID Value Required
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Frontend ID</label>
+                <input type="text" class="form-control" formControlName="FrontendID" #FrontendID />
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Frontend URL </label>
+                <input type="text" class="form-control" formControlName="FrontendIP" #FrontendIP />
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Request DateTime</label>
+                <input type="text" class="form-control" formControlName="RequestDateTime" #RequestDateTime />
+            </div>
+            <div class="form-group">
+                <div ngbDropdown class="d-inline-block">
+                    <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Select a Hardware</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                        <button ngbDropdownItem *ngFor = "let request of requestsHardware">{{request}}</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row col-md-4">Start Time</div>
+            <div class="row">
+                <div class="col-md-4 my-auto">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="DateStart"
+                                [ngModelOptions]="{standalone: true}" ngbDatepicker #dStart="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar" (click)="dStart.toggle()"
+                                    type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 my-auto">
+                    <ngb-timepicker [(ngModel)]="TimeStart" [ngModelOptions]="{standalone: true}" [seconds]="true">
+                    </ngb-timepicker>
+                </div>
+            </div>
+            <div class="row col-md-4">End Time</div>
+            <div class="row">
+                <div class="col-md-4 my-auto">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input class="form-control" placeholder="yyyy-mm-dd" name="dp2" [(ngModel)]="DateEnd"
+                                [ngModelOptions]="{standalone: true}" ngbDatepicker #dEnd="ngbDatepicker">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar" (click)="dEnd.toggle()"
+                                    type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <ngb-timepicker [(ngModel)]="TimeEnd" [ngModelOptions]="{standalone: true}" [seconds]=true>
+                    </ngb-timepicker>
+                </div>
+            </div>
+            <hr />
+            <div class="form-group">
+                <button (click)="sendPostRequest(DateStart, TimeStart)" type="submit" class="btn btn-primary">Request
+                    Info</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<hr />
+<pre>Model: {{ DateStart | json }}</pre>
+<pre>Model: {{ DateEnd | json }}</pre>
+<pre>Model: {{ TimeStart | json }}</pre>
+<pre>Model: {{ TimeEnd | json }}</pre>

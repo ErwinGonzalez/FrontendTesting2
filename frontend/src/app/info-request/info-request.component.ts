@@ -4,13 +4,10 @@ import { Observable } from  "rxjs/Observable";
 import { tap, map, filter } from "rxjs/operators";
 import { HttpClient } from  "@angular/common/http";
 
-import InfoRequest from '../InfoRequest'
-import { InforequestService } from '../inforequest.service';
+import InfoRequest from './classes/InfoRequest'
+import { InforequestService } from '../services/inforequest.service';
 
-class Request{
-  constructor(private id:string, private url:string, private datetime:string){}
-  
-}
+
 
 @Component({
   selector: 'app-info-request',
@@ -39,7 +36,7 @@ export class InfoRequestComponent implements OnInit {
   }
 
   updateList(){
-    this.requestsObservable = this.httpClient.get<Request[]>("http://127.0.0.1:3000/inforequests").pipe(tap(console.log));
+    this.requestsObservable = this.httpClient.get<InfoRequest[]>("http://127.0.0.1:3000/inforequests").pipe(tap(console.log));
   }
 
   sendPostRequest(id: string, url: string, datetime: string){

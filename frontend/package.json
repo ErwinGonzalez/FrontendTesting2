@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~8.2.5",
     "@angular/platform-browser-dynamic": "~8.2.5",
     "@angular/router": "~8.2.5",
+    "@ng-bootstrap/ng-bootstrap": "^5.1.1",
     "bootstrap": "^4.3.1",
     "ng2-slim-loading-bar": "^4.0.0",
     "rxjs": "~6.4.0",

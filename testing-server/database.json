@@ -1,4 +1,47 @@
 {
+  "infoResponses": [
+    {
+      "id": "PT_CC8Project001",
+      "url": "192.168.1.10",
+      "date": "1989-12-20T07:35:58.757Z",
+      "hardware": {
+        "id01": {
+          "tag": "Termistor Lineal Ventana",
+          "type": "input"
+        },
+        "id02": {
+          "tag": "Pantalla LED Puerta",
+          "type": "output"
+        },
+        "id03": {
+          "tag": "Ventilador Cuarto",
+          "type": "output"
+        }
+      }
+    }
+  ],
+  "searchRequest": [
+    {
+      "id": "1",
+      "url": "123.213.243.1",
+      "datetime": "2008-09-15T15:53:00Z",
+      "search": {
+        "id_hardware": "id01",
+        "start_date": "1989-10-20T03:25:28.557Z",
+        "finish_date": "1989-12-20T07:45:58.757Z"
+      }
+    },
+    {
+      "id": "2",
+      "url": "123.213.243.1",
+      "datetime": "2008-09-15T15:53:00Z",
+      "search": {
+        "id_hardware": "id01",
+        "start_date": "1989-10-20T03:25:28.557Z",
+        "finish_date": "1989-12-20T07:45:58.757Z"
+      }
+    }
+  ],
   "inforequests": [
     {
       "id": "1",
@@ -174,6 +217,11 @@
       "id": "fdnaosdf",
       "url": "192.168.0.1",
       "datetime": "2019-09-22T04:44:56.091Z"
+    },
+    {
+      "id": "testing_3000",
+      "url": "192.168.0.1",
+      "datetime": "2019-09-22T23:54:26.009Z"
     }
   ],
   "dataresponses": [
