@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class InforequestService {
 
-  uri = 'http://localhost:4000/infoRequests';
+  uri = 'http://localhost:4000/requests';
 
   constructor(private http: HttpClient) { }
 
@@ -17,7 +17,7 @@ export class InforequestService {
       RequestDateTime
     };
     console.log(obj);
-    this.http.post(`${this.uri}/add`, obj)
+    this.http.post(`${this.uri}/inforequest/add`, obj)
         .subscribe(res => console.log('Done'));
   }
 }

@@ -4,8 +4,11 @@ import { Observable } from  "rxjs/Observable";
 import { tap, map, filter } from "rxjs/operators";
 import { HttpClient } from  "@angular/common/http";
 
-import InfoRequest from './classes/InfoRequest'
+import InfoRequest from './classes/InfoRequest';
+import InfoResponse from './classes/InfoResponse';
+import Hardware from './classes/Hardware';
 import { InforequestService } from '../services/inforequest.service';
+import { InfoResponseService } from '../services/inforesponse.service';
 
 
 
@@ -20,7 +23,7 @@ export class InfoRequestComponent implements OnInit {
   requestsObservable : Observable<Request[]>;
   apiAdd: "http://localhost:3000/";
 
-  constructor(private fb: FormBuilder, private httpClient: HttpClient, private irService: InforequestService) {
+  constructor(private fb: FormBuilder, private httpClient: HttpClient, private irqService: InforequestService, private irp : InfoResponseService) {
     this.createForm();
   }
 
@@ -48,14 +51,40 @@ export class InfoRequestComponent implements OnInit {
         var stringResponse = JSON.stringify(response);
         var obj =JSON.parse(stringResponse);
         
-        this.irService.addRequest(obj.id,obj.url,obj.datetime);
+        this.irqService.addRequest(obj.id,obj.url,obj.datetime);
         this.updateList();
       },
       error => {
         console.log('Error', error);
       }
     );
+    this.httpClient.get<InfoResponse[]>("http://127.0.0.1:3000/infoResponses")
+    .pipe(map((reqs: InfoResponse[]) => reqs.map(req => new InfoResponse(req.id, req.url, req.date, req.hardware))))
+    .subscribe(
+      (res: InfoResponse[]) => {
+        for (let req of res) {
+          //console.log(req.hardware);
+          var hard: Hardware[] = new Array();
 
+          if (req && req.hardware) {
+            var ids: string[] = Object.keys(req.hardware);
+            var vals: Object[] = Object.values(req.hardware);
+            for (let i = 0; i < ids.length; i++) {
+              //console.log(vals);
+              var tt: string[] = Object.values(vals[i]);
+              //console.log(tt[0]+tt[1]+ids[i]);
+              var h: Hardware = new Hardware(ids[i], tt[0], tt[1]);
+              hard.push(h);
+
+            }
+            console.log(hard);
+          }
+          req.hardware = hard;
+        }
+        console.log(res);
+        this.irp.addRequest(res[0].id,res[0].url,res[0].date,res[0].hardware)
+      }
+    );
     //this.irService.addRequest(id,url,datetime);
   }
 

@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { InfoRequestComponent } from './info-request/info-request.component';
 import InfoRequest from './info-request/classes/InfoRequest';
 import { InforequestService } from './services/inforequest.service';
+import { InfoResponseService } from './services/inforesponse.service';
 import { SearchRequestComponent } from './search-request/search-request.component';
 
 @NgModule({
@@ -28,7 +29,11 @@ import { SearchRequestComponent } from './search-request/search-request.componen
     HttpClientModule,
     NgbModule
   ],
-  providers: [ InforequestService ],
-  bootstrap: [AppComponent]
+  providers: [ 
+    InforequestService,
+    InfoResponseService 
+  ],
+  bootstrap: [AppComponent],
+  
 })
 export class AppModule { }

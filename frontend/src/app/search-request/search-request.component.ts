@@ -46,7 +46,7 @@ export class SearchRequestComponent implements OnInit {
 
   getList() {
     //make a server call to local, parse the hardware ids
-    var obj = this.httpClient.get<InfoResponse[]>("http://127.0.0.1:3000/infoResponses")
+    this.httpClient.get<InfoResponse[]>("http://127.0.0.1:3000/infoResponses")
       .pipe(map((reqs: InfoResponse[]) => reqs.map(req => new InfoResponse(req.id, req.url, req.date, req.hardware))))
       .subscribe(
         (res: InfoResponse[]) => {
@@ -72,6 +72,7 @@ export class SearchRequestComponent implements OnInit {
           console.log(res);
         }
       );
+      
   }
   getDate(): string {
     var currDate = new Date();
