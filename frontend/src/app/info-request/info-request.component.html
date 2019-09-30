@@ -30,15 +30,10 @@
   </div>
 </div>
 <div>
-  <ul *ngIf="requestsObservable | async as requests else empty">
-
-    <li *ngFor="let request of requests">
-      {{request.id}}
-
-
-    </li>
-
-  </ul>
-
-  <ng-template #empty> No Customers Yet </ng-template>
+    <ul *ngIf="requestsObservable | async as requests else empty">
+      <li *ngFor="let request of requests">
+        {{request.id}}
+      </li>
+    </ul>
+    <ng-template #empty> No Customers Yet </ng-template>
 </div>

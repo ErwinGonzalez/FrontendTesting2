@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let InfoResponse = new Schema({
+let SearchRequest = new Schema({
     id: {
       type: String
     },
@@ -11,11 +11,11 @@ let InfoResponse = new Schema({
     date: {
       type: String
     },
-    hardware:{
-      type: Array
-    }
+    search: {
+      type: Object
+    },
   },{
-      collection: 'InfoResponse'
+      collection: 'SearchRequest'
   });
 
-  module.exports = mongoose.model('InfoResponse', InfoResponse);
+  module.exports = mongoose.model('SearchRequest', SearchRequest);

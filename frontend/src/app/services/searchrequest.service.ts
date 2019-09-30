@@ -4,24 +4,24 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class InfoResponseService {
+export class SearchRequestService {
 
   uri = 'http://localhost:4000/requests';
 
   constructor(private httpClient: HttpClient) { }
 
-  addRequest(id, url, date, hardware) {
+  addRequest(id, url, date, search) {
     const obj = {
       id,
       url,
       date,
-      hardware
+      search
     };
-    //console.log(obj);
-    this.httpClient.post(`${this.uri}/infoResponse/add`, obj)
-        .subscribe(res => console.log('Response Done'));
+    console.log(obj);
+    this.httpClient.post(`${this.uri}/searchRequest/add`, obj)
+        .subscribe(res => console.log('Request Done'));
   }
   getRequests(){
-    return this.httpClient.get("http://localhost:4000/requests/InfoResponse");
+    return this.httpClient.get(`${this.uri}/searchRequest`);
   }
 }

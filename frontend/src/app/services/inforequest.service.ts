@@ -10,14 +10,19 @@ export class InforequestService {
 
   constructor(private http: HttpClient) { }
 
-  addRequest(RequestID, RequestURL, RequestDateTime) {
+  addRequest(id, url, date) {
     const obj = {
-      RequestID,
-      RequestURL,
-      RequestDateTime
+      id,
+      url,
+      date
     };
+    console.log(id);
     console.log(obj);
-    this.http.post(`${this.uri}/inforequest/add`, obj)
-        .subscribe(res => console.log('Done'));
+    this.http.post(`${this.uri}/infoRequest/add`, obj)
+        .subscribe(
+          
+          res => console.log('Done'));
   }
+
+  
 }

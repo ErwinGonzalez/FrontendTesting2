@@ -8,13 +8,13 @@ const Schema = mongoose.Schema;
  * C:\Users\Erwin\Desktop\projects\Proy-Frontend\frontend\src\app\inforequest.service.ts*/
 
 let InfoRequest = new Schema({
-  RequestID: {
+  id: {
     type: String
   },
-  RequestURL: {
+  url: {
     type: String
   },
-  RequestDateTime: {
+  date: {
     type: String
   }
 },{

@@ -13,12 +13,17 @@ import InfoRequest from './info-request/classes/InfoRequest';
 import { InforequestService } from './services/inforequest.service';
 import { InfoResponseService } from './services/inforesponse.service';
 import { SearchRequestComponent } from './search-request/search-request.component';
+import { ChangeRequestComponent } from './change-request/change-request.component';
+import { SearchresponseService } from './services/searchresponse.service';
+import { SearchRequestService } from './services/searchrequest.service';
+import { ChangeRequestService } from './services/changerequest.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     InfoRequestComponent,
-    SearchRequestComponent
+    SearchRequestComponent,
+    ChangeRequestComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +36,10 @@ import { SearchRequestComponent } from './search-request/search-request.componen
   ],
   providers: [ 
     InforequestService,
-    InfoResponseService 
+    InfoResponseService,
+    SearchRequestService,
+    SearchresponseService,
+    ChangeRequestService 
   ],
   bootstrap: [AppComponent],
   

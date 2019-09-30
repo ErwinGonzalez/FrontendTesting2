@@ -42,24 +42,30 @@ export class InfoRequestComponent implements OnInit {
     this.requestsObservable = this.httpClient.get<InfoRequest[]>("http://127.0.0.1:3000/inforequests").pipe(tap(console.log));
   }
 
-  sendPostRequest(id: string, url: string, datetime: string){
-    var request = new InfoRequest(id,url,datetime);
+  sendPostRequest(id: string, url: string, date: string){
+    var request = new InfoRequest(id,url,date);
+    
     this.httpClient.post("http://127.0.0.1:3000/inforequests", request).subscribe(
       response => {
         console.log('POST Request is successful ', response);
         
-        var stringResponse = JSON.stringify(response);
-        var obj =JSON.parse(stringResponse);
         
-        this.irqService.addRequest(obj.id,obj.url,obj.datetime);
+        var obj =JSON.parse(JSON.stringify(response));
+        console.log(obj);
+        this.irqService.addRequest(obj.id,obj.url,obj.date);
         this.updateList();
       },
       error => {
         console.log('Error', error);
       }
     );
+    /**
+     * TODO no encuentro el error, 
+     * los datos se envian bien y se guardan, se pueden leer 
+     * y no tienen errores en el esquema
+     */
     this.httpClient.get<InfoResponse[]>("http://127.0.0.1:3000/infoResponses")
-    .pipe(map((reqs: InfoResponse[]) => reqs.map(req => new InfoResponse(req.id, req.url, req.date, req.hardware))))
+    //.pipe(map((reqs: InfoResponse[]) => reqs.map(req => new InfoResponse(req.id, req.url, req.date, req.hardware))))
     .subscribe(
       (res: InfoResponse[]) => {
         for (let req of res) {
