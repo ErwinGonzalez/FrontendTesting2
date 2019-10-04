@@ -5,6 +5,8 @@ import { Observable } from "rxjs/Observable";
 import { tap, map, filter } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 
+import * as CanvasJS from '../../assets/canvasjs.min';
+
 
 import { InfoResponseService } from '../services/inforesponse.service';
 
@@ -76,10 +78,7 @@ export class SearchRequestComponent implements OnInit {
       RequestDateTime: [{ value: this.getDate(), disabled: true }],
       PlatformSelect: [null, Validators.required],
       HardwareSelect: [null, Validators.required],
-      DateStart: ['', Validators.required],
-      TimeStart: ['',Validators.required],
-      DateEnd: ['',Validators.required],
-      TimeEnd: ['',Validators.required]
+      
     });
   }
 
@@ -139,7 +138,7 @@ export class SearchRequestComponent implements OnInit {
     
     console.log(sDet.id_hardware);
     console.log(sReq);
-    this.srs.addRequest(frontendID,platformURL,this.getDate(),sDet);
+    //this.srs.addRequest(frontendID,platformURL,this.getDate(),sDet);
 
 
     this.httpClient.get<SearchResponse[]>("http://127.0.0.1:3000/searchResponse")
@@ -147,25 +146,69 @@ export class SearchRequestComponent implements OnInit {
     .subscribe(
       (res: SearchResponse[]) =>{
         console.log(res);
-        for (let req of res){
-          var data: DataEntry[] = new Array();
-
-          if(req && req.data){
-            var ids: string[] = Object.keys(req.data);
-            var vals: Object[] = Object.values(req.data);
+        var req = res[0];
+          var dataA: DataEntry[] = new Array();
+          console.log(req);
+          console.log(req.id);
+          console.log(Object.keys(req));
+          var fields: Object[] = Object.values(req);
+          var test = new SearchResponse(fields[0].toString(),fields[1].toString(),fields[2].toString(),fields[3],fields[4]);
+          console.log(test);
+          if(test && test.data){
+            var ids: string[] = Object.keys(test.data);
+            var vals: Object[] = Object.values(test.data);
 
             for(let i = 0; i<ids.length; i++){
               var dataDates: string[] = Object.values(vals[i]);
               var dataEntries: DataEntry = new DataEntry(ids[i],parseInt( dataDates[0]),Boolean(dataDates[1]),parseInt(dataDates[2]),dataDates[3]);
-              data.push(dataEntries);
+              dataA.push(dataEntries);
             }
-            console.log(data);
+            console.log(dataA);
           }
-          req.data = data;
-        }
-        console.log(res);
-        //TODO push the response here
-        this.srpns.addRequest(res[0].id,res[0].url, res[0].date, res[0].search, res[0].data);
+          req.data = dataA;
+          test.data = dataA;
+          var values:number[] = [];
+          for(let d of dataA){
+            if(!isNaN(d.sensor))
+              values.push(d.sensor);
+          }
+          console.log(Math.max.apply(null, values));
+          console.log(req);
+          console.log(req.data);
+        
+          let dataPoints = [];
+          var end = 1;
+          var top = 100;
+          var min = Math.min.apply(null, values);
+          var max = Math.max.apply(null,values);
+
+
+          for(let i =0; i<values.length;i++){
+              var normValue = end + (values[i]- min)*(top-end)/(max-min);
+              dataPoints.push({x: new Date(dataA[i].id),y: normValue});
+            
+          }
+          console.log(dataPoints);
+          
+          var chart = new CanvasJS.Chart("chartContainer",
+          {
+            zoomEnabled: true,      
+      
+            title:{
+             text: "Sensor values over Time"       
+           },
+      
+           data: [
+           {        
+            type: "area",
+            xValueType: "dateTime",
+            dataPoints: dataPoints
+            
+          }]
+          });
+
+          chart.render();
+          this.srpns.addRequest(test.id,test.url,test.date,test.search,test.data);
       }
     );
     //console.log(this.dateStart.year);

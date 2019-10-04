@@ -15,7 +15,7 @@ let SearchResponse = new Schema({
         type: Object
     },
     data: {
-        type: Object
+        type: Array
     }
 }, {
     collection: 'SearchResponse'

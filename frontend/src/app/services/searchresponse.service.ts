@@ -11,6 +11,7 @@ export class SearchresponseService {
   constructor(private httpClient: HttpClient) { }
 
   addRequest(id, url, date, search, data) {
+    console.log(id);
     const obj = {
       id, url, date, search, data
     };

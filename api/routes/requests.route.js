@@ -95,7 +95,7 @@ requestRoutes.route('/searchResponse/add').post(function (req, res) {
   let searchResponse = new SearchResponse(req.body);
 
   console.log(searchResponse);
-  searchRequest.save()
+  searchResponse.save()
     .then(searchResponse => {
 
       res.status(200).json({ 'Request': 'Response has been added successfully' });

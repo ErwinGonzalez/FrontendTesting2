@@ -11,6 +11,7 @@ export class ChangeRequestService {
   constructor(private httpClient: HttpClient) { }
 
   addRequest(id,url,date,change){
+    console.log(id);
     const obj = {
       id,
       url,

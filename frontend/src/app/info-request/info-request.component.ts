@@ -71,7 +71,7 @@ export class InfoRequestComponent implements OnInit {
         for (let req of res) {
           //console.log(req.hardware);
           var hard: Hardware[] = new Array();
-
+          console.log(req);
           if (req && req.hardware) {
             var ids: string[] = Object.keys(req.hardware);
             var vals: Object[] = Object.values(req.hardware);
