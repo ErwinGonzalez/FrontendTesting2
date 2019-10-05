@@ -1,4 +1,12 @@
 {
+  "changeResponses": [
+    {
+      "​id​": "PT_CC8Project001",
+      "​url​": "192.168.1.10",
+      "​date​": "1989-12-20T07:35:12.457Z",
+      "​status​": "OK / ERROR"
+    }
+  ],
   "changeRequest": [
     {
       "id": "frontend",

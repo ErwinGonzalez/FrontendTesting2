@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-body">
         <form [formGroup]="angForm" novalidate>
-            <div *ngIf="angForm.controls['FrontendID'].invalid && (angForm.controls['FrontendID'].dirty || angForm.controls['FrontendID'].touched)"
+            <div *ngIf="angForm.controls['FrontendID'].invalid"
                 class="alert alert-danger">
                 <div *ngIf="angForm.controls['FrontendID'].errors.required">
                     Frontend ID Value Required
@@ -9,32 +9,32 @@
             </div>
             <div class="form-group">
                 <label class="col-md-4">Frontend ID</label>
-                <input type="text" class="form-control" formControlName="FrontendID" #FrontendID />
+                <input type="text" class="form-control" formControlName="FrontendID" #FrontendID value="{{frontendID}}" />
             </div>
+            <div class = "row">
+                    <div class="form-group col-md-4">
+                            <select class="form-control" formControlName = "PlatformSelect" (change)=changeSelected($event)>
+                                    <option [ngValue]=null disabled>Select a Platform</option>
+                                    <option *ngFor = "let request of infoResponses" value={{request.id}}
+                                    >{{request.id}}</option>
+                            </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <select class="form-control" formControlName = "HardwareSelect" (change)=changeSelectedHw($event)>
+                                <option [ngValue]=null disabled>Select a Hardware</option>
+                                <option *ngFor = "let request of requestsHardware" value={{request.id}}
+                                >{{request.id}}</option>
+                        </select>
+                    </div>
+                </div>    
             <div class="form-group">
                 <label class="col-md-4">Platfrom URL </label>
-                <input type="text" class="form-control" formControlName="PlatformURL" #PlatformURL />
+                <input type="text" class="form-control" formControlName="PlatformURL" value="{{platUrl}}" #PlatformURL/>
             </div>
             <div class="form-group">
                 <label class="col-md-4">Request DateTime</label>
                 <input type="text" class="form-control" formControlName="RequestDateTime" #RequestDateTime />
             </div>
-            <div class = "row">
-                <div class="form-group col-md-4">
-                        <select class="form-control" formControlName = "PlatformSelect" (change)=changeSelected($event)>
-                                <option [ngValue]=null disabled>Select a Platform</option>
-                                <option *ngFor = "let request of infoResponses" value={{request.id}}
-                                >{{request.id}}</option>
-                        </select>
-                </div>
-                <div class="form-group col-md-4">
-                    <select class="form-control" formControlName = "HardwareSelect" (change)=changeSelectedHw($event)>
-                            <option [ngValue]=null disabled>Select a Hardware</option>
-                            <option *ngFor = "let request of requestsHardware" value={{request.id}}
-                            >{{request.id}}</option>
-                    </select>
-                </div>
-            </div>    
             
             <div class="form-group">
                 <label class="col-md-4">Status</label>
@@ -51,7 +51,8 @@
 
             <hr />
             <div class="form-group">
-                <button (click)="sendChangeRequest(FrontendID.value, PlatformURL.value, SensorStatus.value, SensorFrequency.value, SensorText.value)" type="submit" class="btn btn-primary">Request
+                <button (click)="sendChangeRequest()" type="submit" class="btn btn-primary"
+                [disabled]="angForm.invalid">Request
                     Info</button>
             </div>
         </form>

@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-body">
         <form [formGroup]="angForm" novalidate>
-            <div *ngIf="angForm.controls['FrontendID'].invalid && (angForm.controls['FrontendID'].dirty || angForm.controls['FrontendID'].touched)"
+            <div *ngIf="angForm.controls['FrontendID'].invalid "
                 class="alert alert-danger">
                 <div *ngIf="angForm.controls['FrontendID'].errors.required">
                     Frontend ID Value Required
@@ -9,38 +9,40 @@
             </div>
             <div class="form-group">
                 <label class="col-md-4">Frontend ID</label>
-                <input type="text" class="form-control" formControlName="FrontendID" #FrontendID />
+                <input type="text" class="form-control" formControlName="FrontendID" #FrontendID value="{{frontendID}}"/>
             </div>
+            <div class = "row">
+                
+                    <div class="form-group col-md-4">
+                        <select class="form-control" formControlName = "PlatformSelect" (change)=changeSelected($event)>
+                            <option [ngValue]=null disabled>Select a Platform</option>
+                            <option *ngFor = "let request of infoResponses" value={{request.id}}
+                            >{{request.id}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <select class="form-control" formControlName = "HardwareSelect" (change)=changeSelectedHw($event)>
+                                <option [ngValue]=null disabled>Select a Hardware</option>
+                                <option *ngFor = "let request of requestsHardware" value={{request.id}}
+                                >{{request.id}}</option>
+                        </select>
+                    </div>
+                </div>    
             <div class="form-group">
                 <label class="col-md-4">Platfrom URL </label>
-                <input type="text" class="form-control" formControlName="PlatformURL" #PlatformURL />
+                <input type="text" class="form-control" formControlName="PlatformURL" value = "{{platURL}}"#PlatformURL/>
             </div>
             <div class="form-group">
                 <label class="col-md-4">Request DateTime</label>
                 <input type="text" class="form-control" formControlName="RequestDateTime" #RequestDateTime />
             </div>
-            <div class = "row">
-                <div class="form-group col-md-4">
-                    <select class="form-control" formControlName = "PlatformSelect" (change)=changeSelected($event)>
-                        <option [ngValue]=null disabled>Select a Platform</option>
-                        <option *ngFor = "let request of infoResponses" value={{request.id}}
-                        >{{request.id}}</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-4">
-                    <select class="form-control" formControlName = "HardwareSelect" (change)=changeSelectedHw($event)>
-                            <option [ngValue]=null disabled>Select a Hardware</option>
-                            <option *ngFor = "let request of requestsHardware" value={{request.id}}
-                            >{{request.id}}</option>
-                    </select>
-                </div>
-            </div>    
+            <hr/>
             <div class="row col-md-4">Start Time</div>
             <div class="row">
                 <div class="col-md-4 my-auto">
                     <div class="form-group">
                         <div class="input-group">
-                            <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="DateStart" [ngModelOptions]="{standalone: true}"
+                            <input class="form-control"  placeholder="yyyy-mm-dd" name="dp" formControlName="DateStart"
                                  ngbDatepicker #dStart="ngbDatepicker">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary calendar" (click)="dStart.toggle()"
@@ -50,7 +52,7 @@
                     </div>
                 </div>
                 <div class="col-md-4 ">
-                    <ngb-timepicker [(ngModel)]="TimeStart" [ngModelOptions]="{standalone: true}"  [seconds]="true" required>
+                    <ngb-timepicker formControlName="TimeStart"  [seconds]="true" required>
                     </ngb-timepicker>
                 </div>
             </div>
@@ -59,7 +61,7 @@
                 <div class="col-md-4 my-auto">
                     <div class="form-group">
                         <div class="input-group">
-                            <input class="form-control" placeholder="yyyy-mm-dd" name="dp2" [(ngModel)]="DateEnd" [ngModelOptions]="{standalone: true}"
+                            <input class="form-control" placeholder="yyyy-mm-dd" name="dp2" formControlName="DateEnd" 
                                  ngbDatepicker #dEnd="ngbDatepicker">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary calendar" (click)="dEnd.toggle()"
@@ -69,18 +71,14 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <ngb-timepicker [(ngModel)]="TimeEnd" [ngModelOptions]="{standalone: true}" [seconds]=true>
+                    <ngb-timepicker formControlName="TimeEnd" [seconds]=true>
                     </ngb-timepicker>
                 </div>
             </div>
             <hr />
             <div class="form-group">
-                <button (click)="sendPostRequest(FrontendID.value, PlatformURL.value, RequestDateTime, 
-                    DateStart.year,DateStart.month,DateStart.day,
-                    TimeStart.hour, TimeStart.minute, TimeStart.second,
-                    DateEnd.year,DateEnd.month,DateEnd.day,
-                    TimeEnd.hour, TimeEnd.minute, TimeEnd.second)" type="submit" class="btn btn-primary"
-                    >Request
+                <button (click)="sendPostRequest()" type="submit" class="btn btn-primary"
+                    [disabled]="angForm.invalid">Request
                     Info</button>
             </div>
             <hr/>

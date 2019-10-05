@@ -8,6 +8,7 @@ let InfoResponse = require('../models/InfoResponse');
 let SearchRequest = require('../models/SearchRequest');
 let SearchResponse = require('../models/SearchResponse');
 let ChangeRequest = require('../models/ChangeRequest');
+let ChangeResponse = require('../models/ChangeResponse');
 
 // Defined store route
 requestRoutes.route('/infoRequest/add').post(function (req, res) {
@@ -141,4 +142,31 @@ requestRoutes.route('/changeRequest').get(function (req, res) {
     }
   });
 });
+
+requestRoutes.route('/changeResponse/add').post(function (req, res) {
+
+  let changeResponse = new ChangeResponse(req.body);
+
+  console.log(changeResponse);
+  changeResponse.save()
+    .then(changeResponse => {
+
+      res.status(200).json({ 'Request': 'Request has been added successfully' });
+    })
+    .catch(err => {
+      res.status(400).send("unable to save to database");
+    });
+});
+
+requestRoutes.route('/changeResponse').get(function (req, res) {
+  ChangeResponse.find(function (err, requests) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      res.json(requests);
+    }
+  });
+});
+
 module.exports = requestRoutes;
