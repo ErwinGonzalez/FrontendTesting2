@@ -65,6 +65,29 @@ requestRoutes.route('/infoResponse').get(function (req, res) {
   });
 });
 
+requestRoutes.route('/infoResponse/update/:id').post(function (req, res) {
+  console.log(req.params.id);
+  InfoResponse.findById(req.params.id,function (err, response) {
+    if (!response) {
+      res.status(404).send("Not Found");
+    }
+    else {
+      response.id = req.body.id;
+      response.url = req.body.url;
+      response.date = req.body.date;
+      response.hardware = req.body.hardware;
+      
+      response.save().then( response => {
+        res.json('Update Complete');
+      }).
+      catch(err=>{
+        res.status(400).send("Unable to update Database");
+      });
+
+    }
+  });
+});
+
 requestRoutes.route('/searchRequest/add').post(function (req, res) {
 
   let searchRequest = new SearchRequest(req.body);

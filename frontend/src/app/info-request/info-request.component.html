@@ -14,15 +14,15 @@
         <input type="text" class="form-control" formControlName="FrontendID" #FrontendID />
       </div>
       <div class="form-group">
-        <label class="col-md-4">Frontend URL </label>
-        <input type="text" class="form-control" formControlName="FrontendIP" #FrontendIP />
+        <label class="col-md-4">Platform URL </label>
+        <input type="text" class="form-control" formControlName="PlatformURL" #PlatformURL />
       </div>
       <div class="form-group">
         <label class="col-md-4">Request DateTime</label>
         <input type="text" class="form-control" formControlName="RequestDateTime" #RequestDateTime />
       </div>
       <div class="form-group">
-        <button (click)="sendPostRequest(FrontendID.value,FrontendIP.value,RequestDateTime.value)" type="submit"
+        <button (click)="sendPostRequest()" type="submit"
           class="btn btn-primary" [disabled]="angForm.pristine || angForm.invalid">Request Info</button>
 
       </div>

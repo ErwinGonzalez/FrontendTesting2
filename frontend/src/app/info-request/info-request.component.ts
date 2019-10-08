@@ -27,7 +27,7 @@ export class InfoRequestComponent implements OnInit {
   createForm() {
     this.angForm = this.fb.group({
       FrontendID: ['', Validators.required],
-      FrontendIP: [{ value: '192.168.0.1', disabled: true }],
+      PlatformURL: ['192.168.1.10', Validators.required],
       RequestDateTime: [{ value: this.getDate(), disabled: true }]
     });
   }
@@ -39,10 +39,16 @@ export class InfoRequestComponent implements OnInit {
     this.requestsObservable = this.httpClient.get<InfoRequest[]>("http://127.0.0.1:3000/inforequests").pipe(tap(console.log));
   }
 
-  sendPostRequest(id: string, url: string, date: string) {
-    var request = new InfoRequest(id, url, date);
-
-    this.httpClient.post("http://127.0.0.1:3000/inforequests", request).subscribe(
+  sendPostRequest() {
+    //var request = new InfoRequest(id, url, date);
+    let frontendID = this.angForm.controls.FrontendID.value;
+    let platformURL = this.angForm.controls.PlatformURL.value;
+    let date = this.getDate();
+    console.log(frontendID);
+    console.log(platformURL);
+    console.log(date);
+    this.irqService.addRequest(frontendID,platformURL, date);
+    /*this.httpClient.post("http://127.0.0.1:3000/inforequests", request).subscribe(
       response => {
         console.log('POST Request is successful ', response);
 
@@ -55,19 +61,62 @@ export class InfoRequestComponent implements OnInit {
       error => {
         console.log('Error', error);
       }
-    );
-    /**
-     * TODO no encuentro el error, 
-     * los datos se envian bien y se guardan, se pueden leer 
-     * y no tienen errores en el esquema
-     */
-    this.httpClient.get<InfoResponse[]>("http://127.0.0.1:3000/infoResponses")
+    );*/
+    this.httpClient.get("http://127.0.0.1:3000/infoResponses")
       //.pipe(map((reqs: InfoResponse[]) => reqs.map(req => new InfoResponse(req.id, req.url, req.date, req.hardware))))
       .subscribe(
-        (res: InfoResponse[]) => {
-          for (let req of res) {
+        res => {
+          console.log(res);
+          let req = res[0];
+          let responseFields: String[] = Object.values(req);
+          let hardwareList: Hardware[] = [];
+          var ids: string[] = Object.keys(req.hardware);
+          var vals: Object[] = Object.values(req.hardware);
+          for (let i = 0; i < ids.length; i++) {
+            var tt: string[] = Object.values(vals[i]);
+            var h: Hardware = new Hardware(ids[i], tt[0], tt[1]);
+            hardwareList.push(h);
+          }
+          req.hardware = hardwareList
+          console.log(req);
+
+          let infoResponses = [];
+          this.irp.getRequests().subscribe(
+            res => {
+              var obj = JSON.stringify(res);
+              var json = JSON.parse(obj);
+              
+              let _id;
+
+              json.forEach(element => {
+                console.log(element._id);
+                _id = element._id;
+                var info: InfoResponse = new InfoResponse(element.id, element.url, element.date, element.hardware);
+
+                //console.log(info);
+                infoResponses.push(info);
+
+              });
+              console.log(infoResponses);
+              var exists = infoResponses.find(function (element) {
+                return element.id == req.id;
+              });
+
+              console.log(exists);
+              if(exists){
+                console.log(_id);
+                this.irp.update(req.id,req.url,req.date,req.hardware,_id);
+              }else{
+                this.irp.addRequest(req.id,req.url,req.date,req.hardware);
+              }
+            }
+          );
+            
+          //this.irp.addRequest(req.id, req.url, req.date, req.hardware);
+          /*for (let req of res) {
             //console.log(req.hardware);
             var hard: Hardware[] = new Array();
+
             console.log(req);
             if (req && req.hardware) {
               var ids: string[] = Object.keys(req.hardware);
@@ -85,7 +134,7 @@ export class InfoRequestComponent implements OnInit {
             req.hardware = hard;
           }
           console.log(res);
-          this.irp.addRequest(res[0].id, res[0].url, res[0].date, res[0].hardware)
+          this.irp.addRequest(res[0].id, res[0].url, res[0].date, res[0].hardware)*/
         }
       );
     //this.irService.addRequest(id,url,datetime);

@@ -129,13 +129,13 @@ export class SearchRequestComponent implements OnInit {
 
     console.log(sDet.id_hardware);
     console.log(sReq);
-    //this.srs.addRequest(frontendID,platformURL,this.getDate(),sDet);
+    this.srs.addRequest(frontendID,platformURL,this.getDate(),sDet);
 
 
-    this.httpClient.get<SearchResponse[]>("http://127.0.0.1:3000/searchResponse")
+    this.httpClient.get("http://127.0.0.1:3000/searchResponse")
       //.pipe(map((reqs: SearchResponse[])=> reqs.map(res => new SearchResponse(res.id, res.url, res.date, res.search,res.data))))
       .subscribe(
-        (res: SearchResponse[]) => {
+        res => {
           console.log(res);
           var req = res[0];
           var dataA: DataEntry[] = new Array();
@@ -200,7 +200,7 @@ export class SearchRequestComponent implements OnInit {
 
           chart.render();
 
-          // this.srpns.addRequest(test.id,test.url,test.date,test.search,test.data);
+          this.srpns.addRequest(test.id,test.url,test.date,test.search,test.data);
         }
       );
     //console.log(this.dateStart.year);

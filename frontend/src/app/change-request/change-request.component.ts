@@ -98,8 +98,8 @@ export class ChangeRequestComponent implements OnInit {
         return element.id == sSen;
     });
     console.log(this.hardware);
-    console.log(this.hardware.det.type);
-    this.hardwareType = this.hardware.det.type;
+    console.log(this.hardware.detail.type);
+    this.hardwareType = this.hardware.detail.type;
   }
 
   getDate(): string {
@@ -127,12 +127,12 @@ export class ChangeRequestComponent implements OnInit {
       "text": text
     };
     console.log(change);
-    //this.crs.addRequest(id, url, this.getDate(), change);
+    this.crs.addRequest(id, url, this.getDate(), change);
     //TODO send http request
 
-    this.httpClient.get<ChangeResponse[]>("http://127.0.0.1:3000/changeResponses")
+    this.httpClient.get("http://127.0.0.1:3000/changeResponses")
     .subscribe(
-      (res:ChangeResponse[]) =>{
+      res =>{
         console.log(res);
         var req = res[0];
         var responseFields: String []= Object.values(req);

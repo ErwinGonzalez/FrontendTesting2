@@ -24,4 +24,14 @@ export class InfoResponseService {
   getRequests(){
     return this.httpClient.get("http://localhost:4000/requests/InfoResponse");
   }
+  update(id,url,date,hardware,updateID){
+    const obj = {
+      id,
+      url,
+      date,
+      hardware
+    };
+    this.httpClient.post(`${this.uri}/infoResponse/update/${updateID}`,obj)
+    .subscribe(res=>console.log('Updated!'));
+  }
 }
