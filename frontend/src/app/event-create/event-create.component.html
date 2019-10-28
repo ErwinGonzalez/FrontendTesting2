@@ -1,0 +1,144 @@
+<div class="card">
+    <div class="card-body">
+        <form [formGroup]="angForm" novalidate>
+            <div *ngIf="angForm.controls['FrontendID'].invalid" class="alert alert-danger">
+                <div *ngIf="angForm.controls['FrontendID'].errors.required">
+                    Frontend ID Value Required
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Frontend ID</label>
+                <input type="text" class="form-control" formControlName="FrontendID" #FrontendID
+                    value="{{frontendID}}" />
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <select class="form-control" formControlName="DestinationPlatformSelect" id="DestinationPlatformSelect" (change)=changeSelected($event)>
+                        <option [ngValue]=null disabled>Select a Platform</option>
+                        <option *ngFor="let request of platformsList" value={{request.id}}>{{request.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Destination Platform</label>
+                <input type="text" class="form-control" formControlName="DestinationPlatform" value={{destinationPlatformURL}}/>
+            </div>
+            <hr/>
+            <p>If-Left</p>
+            
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <select class="form-control" formControlName="PlatformSelect" id="PlatformSelect" (change)=changeSelected($event)>
+                        <option [ngValue]=null disabled>Select a Platform</option>
+                        <option *ngFor="let request of platformsList" value={{request.id}}>{{request.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <select class="form-control" formControlName="HardwareSelect" id="HardwareSelect"(change)=changeSelectedHw($event)>
+                        <option [ngValue]=null disabled>Select a Hardware</option>
+                        <option *ngFor="let request of hardwareList" value={{request.id}}>{{request.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Platform URL</label>
+                <input type="text" class="form-control" formControlName="PlatformURL" value={{ifPlatformURL}} #PlatformURL/>
+            </div>
+            <div>
+                <label class="col-md-4">Frequency </label>
+                <input type="text" class="form-control" formControlName="UpdateFrequency" #UpdateFrequency />
+            </div>
+            <hr />
+            <p>If Condition</p>
+            <mat-button-toggle-group #group="matButtonToggleGroup" name="conditionSelect"  formControlName= "ConditionSelect"
+            (change)="onValChange(group.value)">
+                <mat-button-toggle value="Equal" >=</mat-button-toggle>
+                <mat-button-toggle value="NotEqual" >!=</mat-button-toggle>
+                <mat-button-toggle value="LessThan"><</mat-button-toggle> 
+                <mat-button-toggle value="GreaterThan">></mat-button-toggle>
+                <mat-button-toggle value="LessOrEqual">=<</mat-button-toggle>
+                 <mat-button-toggle value="GreaterOrEqual">=></mat-button-toggle>
+            </mat-button-toggle-group>
+            <hr />
+            <p>If-Right</p>
+            <div class="form-group">
+                <label class="col-md-4">Sensor</label>
+                <input type="text" class="form-control" formControlName="SensorValue" #SensorID />
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Status</label>
+                <input type="text" class="form-control" formControlName="SensorStatus" #SensorStatus />
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Frequency</label>
+                <input type="text" class="form-control" formControlName="SensorFrequency" #SensorFrequency />
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">SensorText</label>
+                <input type="text" class="form-control" formControlName="SensorText" #SensorText />
+            </div>
+
+            <hr />
+            <p>If-Then</p>
+            <div class="form-group">
+                <label class="col-md-4">Status</label>
+                <input type="text" class="form-control" formControlName="SensorStatusThen" #SensorStatusThen />
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Frequency</label>
+                <input type="text" class="form-control" formControlName="SensorFrequencyThen" #SensorFrequencyThen />
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">SensorText</label>
+                <input type="text" class="form-control" formControlName="SensorTextThen" #SensorTextThen />
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <select class="form-control" formControlName="PlatformSelectThen" id="PlatformSelectThen" (change)=changeSelected($event)>
+                        <option [ngValue]=null disabled>Select a Platform</option>
+                        <option *ngFor="let request of platformsList" value={{request.id}}>{{request.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <select class="form-control" formControlName="HardwareSelectThen" id="HardwareSelectThen" (change)=changeSelectedHw($event)>
+                        <option [ngValue]=null disabled>Select a Hardware</option>
+                        <option *ngFor="let request of hardwareThenList" value={{request.id}}>{{request.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <hr />
+            <p>If-Else</p>
+            <div class="form-group">
+                <label class="col-md-4">Status</label>
+                <input type="text" class="form-control" formControlName="SensorStatusElse" #SensorStatusElse />
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">Frequency</label>
+                <input type="text" class="form-control" formControlName="SensorFrequencyElse" #SensorFrequencyElse />
+            </div>
+            <div class="form-group">
+                <label class="col-md-4">SensorText</label>
+                <input type="text" class="form-control" formControlName="SensorTextElse" #SensorTextElse />
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <select class="form-control" formControlName="PlatformSelectElse" id="PlatformSelectElse" (change)=changeSelected($event)>
+                        <option [ngValue]=null disabled>Select a Platform</option>
+                        <option *ngFor="let request of platformsList" value={{request.id}}>{{request.id}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <select class="form-control" formControlName="HardwareSelectElse" id="HardwareSelectElse" (change)=changeSelectedHw($event)>
+                        <option [ngValue]=null disabled>Select a Hardware</option>
+                        <option *ngFor="let request of hardwareElseList" value={{request.id}}>{{request.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <hr />
+            <div class="form-group">
+                <button (click)="sendCreateEvent()" type="submit" class="btn btn-primary"
+                    [disabled]="angForm.invalid">Create Event</button>
+            </div>
+        </form>
+    </div>
+</div>

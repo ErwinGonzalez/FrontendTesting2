@@ -8,7 +8,8 @@ let InfoResponse = require('../models/InfoResponse');
 let SearchRequest = require('../models/SearchRequest');
 let SearchResponse = require('../models/SearchResponse');
 let ChangeRequest = require('../models/ChangeRequest');
-let ChangeResponse = require('../models/ChangeResponse');
+let CreateRequest = require('../models/CreateRequest');
+let CreateResponse = require('../models/CreateResponse');
 
 // Defined store route
 requestRoutes.route('/infoRequest/add').post(function (req, res) {
@@ -183,6 +184,57 @@ requestRoutes.route('/changeResponse/add').post(function (req, res) {
 
 requestRoutes.route('/changeResponse').get(function (req, res) {
   ChangeResponse.find(function (err, requests) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      res.json(requests);
+    }
+  });
+});
+requestRoutes.route('/createRequest/add').post(function (req, res) {
+
+  let createRequest = new CreateRequest(req.body);
+
+  console.log("routes");
+  
+  createRequest.save()
+    .then(createRequest => {
+
+      res.status(200).json({ 'Request': 'Request has been added successfully' });
+    })
+    .catch(err => {
+      res.status(400).send("unable to save to database");
+    });
+});
+
+requestRoutes.route('/createRequest').get(function (req, res) {
+  createRequest.find(function (err, requests) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      res.json(requests);
+    }
+  });
+});
+requestRoutes.route('/createResponse/add').post(function (req, res) {
+
+  let createResponse = new CreateResponse(req.body);
+
+  console.log(createResponse);
+  createResponse.save()
+    .then(createResponse => {
+
+      res.status(200).json({ 'Request': 'Request has been added successfully' });
+    })
+    .catch(err => {
+      res.status(400).send("unable to save to database");
+    });
+});
+
+requestRoutes.route('/createResponse').get(function (req, res) {
+  CreateResponse.find(function (err, requests) {
     if (err) {
       console.log(err);
     }

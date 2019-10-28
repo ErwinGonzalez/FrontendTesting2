@@ -7,6 +7,8 @@ import InfoResponse from '../info-request/classes/InfoResponse';
 import { InfoResponseService } from '../services/inforesponse.service';
 import { SearchRequestService } from '../services/searchrequest.service';
 import { SearchresponseService } from '../services/searchresponse.service';
+import { ToastrService } from 'ngx-toastr';
+
 import DataEntry from './classes/DataEntry';
 import SearchDetails from './classes/SearchDetails';
 import SearchRequest from './classes/SearchRequest';
@@ -24,13 +26,14 @@ export class SearchRequestComponent implements OnInit {
   requestsHardware: string[] = [];
   infoResponses = [];
   selectedPlatform = "";
-  platURL="192.165.0.1";
-  frontendID="CCVIII-FE";
+  platURL = "192.165.0.1";
+  frontendID = "CCVIII-FE";
   selectedSensor = "Select a Hardware";
   platformHardware = [];
+  frontendURL="192.168.1.14";
 
 
-  constructor(private fb: FormBuilder, private httpClient: HttpClient, private irp: InfoResponseService, private srs: SearchRequestService, private srpns: SearchresponseService) { }
+  constructor(private fb: FormBuilder, private httpClient: HttpClient, private irp: InfoResponseService, private srs: SearchRequestService, private srpns: SearchresponseService, private toastr: ToastrService) { }
 
   ngOnInit() {
     this.createForm();
@@ -129,9 +132,20 @@ export class SearchRequestComponent implements OnInit {
 
     console.log(sDet.id_hardware);
     console.log(sReq);
-    this.srs.addRequest(frontendID,platformURL,this.getDate(),sDet);
+    this.srs.addRequest(frontendID, platformURL, this.getDate(), sDet);
 
 
+    var obj = {
+      "id": frontendID,
+      "url": platformURL,
+      "date": this.getDate(),
+      "search":{
+        "id_hardware": this.selectedSensor,
+        "start_date": sDate.toISOString(),
+        "finish_date": eDate.toISOString()
+      }
+    };
+    //this.httpClient.post(`http://${platformURL}/search`,obj);
     this.httpClient.get("http://127.0.0.1:3000/searchResponse")
       //.pipe(map((reqs: SearchResponse[])=> reqs.map(res => new SearchResponse(res.id, res.url, res.date, res.search,res.data))))
       .subscribe(
@@ -200,30 +214,12 @@ export class SearchRequestComponent implements OnInit {
 
           chart.render();
 
-          this.srpns.addRequest(test.id,test.url,test.date,test.search,test.data);
+          this.srpns.addRequest(test.id, test.url, test.date, test.search, test.data);
+          this.showSuccess(test.id, test.url, test.data.length);
         }
       );
-    //console.log(this.dateStart.year);
-
-    //FrontendID, PlatformURL, RequestDateTime, request.id, DateStart,TimeStart,DateEnd,TimeEnd
-
-    /*var request = new (id,url,datetime);
-    this.httpClient.post("http://127.0.0.1:3000/inforequests", request).subscribe(
-      response => {
-        console.log('POST Request is successful ', response);
-        
-        var stringResponse = JSON.stringify(response);
-        var obj =JSON.parse(stringResponse);
-        
-        this.irService.addRequest(obj.id,obj.url,obj.datetime);
-        this.updateList();
-      },
-      error => {
-        console.log('Error', error);
-      }
-    );*/
-
-    //this.irService.addRequest(id,url,datetime);
   }
-
+  showSuccess(platID: string, platURL: string, platResponseLenght: number) {
+    this.toastr.success(`${platID} with URL ${platURL} sent ${platResponseLenght} data points`, "Response from platform saved!");
+  }
 }

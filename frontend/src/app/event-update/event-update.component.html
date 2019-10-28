@@ -1,0 +1,12 @@
+<p>event-update works!</p>
+<form [formGroup]="angForm" novalidate>
+    <mat-button-toggle-group #group="matButtonToggleGroup" name="fontStyle" aria-label="Font Style"
+     formControlName="ConditionSelect" (change)="onValChange(group.value)">
+        <mat-button-toggle value="Equal" >=</mat-button-toggle>
+        <mat-button-toggle value="NotEqual" >!=</mat-button-toggle>
+        <mat-button-toggle value="LessThan"><</mat-button-toggle> 
+        <mat-button-toggle value="GreaterThan">></mat-button-toggle>
+        <mat-button-toggle value="LessOrEqual">=<</mat-button-toggle> 
+        <mat-button-toggle value="GreaterOrEqual">=></mat-button-toggle>
+    </mat-button-toggle-group>
+</form>
