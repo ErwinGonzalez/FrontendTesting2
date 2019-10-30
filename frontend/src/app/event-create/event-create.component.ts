@@ -248,10 +248,11 @@ export class EventCreateComponent implements OnInit {
       "url":this.destinationPlatformURL,
       "date":this.getDate(),
       "create":create
-    };*/
+    };
+    this.httpClient.post(´${destinationUrl}/create´,obj);
+    */
 
-    this.crq.addRequest(this.frontendID, this.destinationPlatformURL, this.getDate(), create);
-
+    
     this.httpClient.get("http://127.0.0.1:3000/createResponses")
       .subscribe(
         res => {
@@ -264,6 +265,7 @@ export class EventCreateComponent implements OnInit {
             this.sendSuccess(responseFields[0], responseFields[1]);
           else if (responseFields[3] == 'ERROR')
             this.sendError(responseFields[0], responseFields[1]);
+            this.crq.addRequest(this.frontendID, this.destinationPlatformURL, this.getDate(), create);
         }
       );
 

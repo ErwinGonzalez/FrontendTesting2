@@ -6,6 +6,7 @@ import { ChangeRequestService } from '../services/changerequest.service';
 import { InfoResponseService } from '../services/inforesponse.service';
 import { ToastrService } from 'ngx-toastr';
 import InfoResponse from '../info-request/classes/InfoResponse';
+import ChangeResponse from './classes/ChangeResponse';
 
 @Component({
   selector: 'app-change-request',
@@ -44,7 +45,7 @@ export class ChangeRequestComponent implements OnInit {
       HardwareSelect: [null, Validators.required],
       SensorStatus: ['', Validators.required],
       SensorFrequency: ['', Validators.required],
-      SensorText: ['', Validators.required]
+      SensorText: ''
     });
   }
   getList() {
@@ -100,8 +101,13 @@ export class ChangeRequestComponent implements OnInit {
     console.log(this.hardware.detail.type);
     this.hardwareType = this.hardware.detail.type;
     if (this.hardwareType == 'output') {
+      this.angForm.controls.SensorText.setValidators([Validators.required]);
+      this.angForm.controls.SensorText.setValue('');
+    }
+    if (this.hardwareType == 'input'){
       this.angForm.controls.SensorText.setValidators([]);
-
+      this.angForm.controls.SensorText.setValue(' ');
+      this.angForm.controls.SensorText.clearValidators();
     }
   }
 
@@ -113,7 +119,7 @@ export class ChangeRequestComponent implements OnInit {
   sendChangeRequest() {
 
     var id = this.angForm.controls.FrontendID.value;
-    var url = this.angForm.controls.PlatformURL.value;
+    var url = this.platUrl;
     var status = this.angForm.controls.SensorStatus.value;
     var freq = this.angForm.controls.SensorFrequency.value;
     var text = this.angForm.controls.SensorText.value;
@@ -137,22 +143,23 @@ export class ChangeRequestComponent implements OnInit {
       };
     }
     console.log(change);
-    this.crs.addRequest(id, url, this.getDate(), change);
+    this.crs.addRequest(id, this.frontendURL, this.getDate(), change);
     //TODO send http request
 
     var obj = {
       "id": id,
-      "url": url,
+      "url": this.frontendURL,
       "date": this.getDate(),
       change
     };
     console.log(obj);
-    //this.httpClient.post(`http://${platformURL}/change`,obj);
-    this.httpClient.get("http://127.0.0.1:3000/changeResponses")
+    this.httpClient.post(`http://${url}/change`,obj)
+    //this.httpClient.get("http://127.0.0.1:3000/changeResponses")
       .subscribe(
         res => {
           console.log(res);
-          var req = res[0];
+          //var req = res[0];
+          let req = res as ChangeResponse;
           var responseFields: String[] = Object.values(req);
           console.log(responseFields);
           this.crps.addRequest(responseFields[0], responseFields[1], responseFields[2], responseFields[3]);
@@ -161,7 +168,7 @@ export class ChangeRequestComponent implements OnInit {
           else if (responseFields[3] == 'ERROR')
             this.sendError(responseFields[0], responseFields[1]);
         }
-      )
+      );
   }
   sendSuccess(platID, platURL) {
     this.toastr.success(`${platID} with URL ${platURL} sent an OK message`, "Response from platform saved!");

@@ -8,6 +8,7 @@ let InfoResponse = require('../models/InfoResponse');
 let SearchRequest = require('../models/SearchRequest');
 let SearchResponse = require('../models/SearchResponse');
 let ChangeRequest = require('../models/ChangeRequest');
+let ChangeResponse = require('../models/ChangeResponse');
 let CreateRequest = require('../models/CreateRequest');
 let CreateResponse = require('../models/CreateResponse');
 

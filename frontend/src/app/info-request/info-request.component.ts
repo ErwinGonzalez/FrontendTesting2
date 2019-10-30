@@ -29,7 +29,7 @@ export class InfoRequestComponent implements OnInit {
   createForm() {
     this.angForm = this.fb.group({
       FrontendID: ['', Validators.required],
-      PlatformURL: ['192.168.1.10', Validators.required],
+      PlatformURL: ['localhost:3000', Validators.required],
       RequestDateTime: [{ value: this.getDate(), disabled: true }]
     });
   }
@@ -38,7 +38,7 @@ export class InfoRequestComponent implements OnInit {
   }
 
   updateList() {
-    this.requestsObservable = this.httpClient.get<InfoRequest[]>("http://127.0.0.1:3000/inforequests").pipe(tap(console.log));
+    //this.requestsObservable = this.httpClient.get<InfoRequest[]>("http://127.0.0.1:3000/inforequests").pipe(tap(console.log));
   }
 
   sendPostRequest() {
@@ -49,22 +49,30 @@ export class InfoRequestComponent implements OnInit {
     console.log(frontendID);
     console.log(platformURL);
     console.log(date);
-    this.irqService.addRequest(frontendID,platformURL, date);
+    this.irqService.addRequest(frontendID,this.frontendURL, date);
     
     var obj = {
       "id":frontendID,
-      "url":platformURL,
+      "url":this.frontendURL,
       "date":date
     }
-    //this.httpClient.post(`http://${platformURL}/info`,obj);
-    this.httpClient.get("http://127.0.0.1:3000/infoResponses")
+    
+        //this.httpClient.get("http://127.0.0.1:3000/infoResponses")
+        //res => {
+          //console.log(res);
+          //let req = res[0];
       //.pipe(map((reqs: InfoResponse[]) => reqs.map(req => new InfoResponse(req.id, req.url, req.date, req.hardware))))
+    this.httpClient.post(`http://${platformURL}/info`,obj)
       .subscribe(
-        res => {
+        res =>{
+          /*console.log(res);
+          let re1 = res[1];*/
           console.log(res);
-          let req = res[0];
-          let responseFields: String[] = Object.values(req);
+          let req = res as InfoResponse;
+          //let responseFields: String[] = Object.values(req);
           let hardwareList: Hardware[] = [];
+          //let req = new InfoResponse(responseFields[0],responseFields[1],responseFields[2], responseFields[3]);
+          //let req = re1 as InfoResponse;
           var ids: string[] = Object.keys(req.hardware);
           var vals: Object[] = Object.values(req.hardware);
           for (let i = 0; i < ids.length; i++) {

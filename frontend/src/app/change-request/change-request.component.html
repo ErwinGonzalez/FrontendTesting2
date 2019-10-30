@@ -23,7 +23,7 @@
                         <select class="form-control" formControlName = "HardwareSelect" (change)=changeSelectedHw($event)>
                                 <option [ngValue]=null disabled>Select a Hardware</option>
                                 <option *ngFor = "let request of requestsHardware" value={{request.id}}
-                                >{{request.id}}</option>
+                                >{{request.detail.tag}}</option>
                         </select>
                     </div>
                 </div>    

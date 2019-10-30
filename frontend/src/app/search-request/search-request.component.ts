@@ -59,12 +59,13 @@ export class SearchRequestComponent implements OnInit {
   }
 
   changeSelectedHw(event: any) {
+    console.log(event.target.value);
     this.selectedSensor = event.target.value;
   }
   createForm() {
     this.angForm = this.fb.group({
       FrontendID: [this.frontendID, Validators.required],
-      PlatformURL: [{ value: '', disabled: true }],
+      PlatformURL: [{ value: null, disabled: true }],
       RequestDateTime: [{ value: this.getDate(), disabled: true }],
       PlatformSelect: [null, Validators.required],
       HardwareSelect: [null, Validators.required],
@@ -108,7 +109,7 @@ export class SearchRequestComponent implements OnInit {
   }
   sendPostRequest() {
     var frontendID = this.angForm.controls.FrontendID.value;
-    var platformURL = this.angForm.controls.PlatformURL.value;
+    var platformURL = this.platURL;
     console.log(frontendID);
     console.log(platformURL);
     console.log(this.getDate());
@@ -125,19 +126,19 @@ export class SearchRequestComponent implements OnInit {
     var sDet = new SearchDetails(this.selectedSensor, sDate.toISOString(), eDate.toISOString());
     var sReq = new SearchRequest(
       frontendID,
-      platformURL,
+      this.frontendURL,
       this.getDate(),
       new SearchDetails(this.selectedSensor, sDate.toISOString(), eDate.toISOString())
     );
 
     console.log(sDet.id_hardware);
     console.log(sReq);
-    this.srs.addRequest(frontendID, platformURL, this.getDate(), sDet);
+    this.srs.addRequest(frontendID, this.frontendURL, this.getDate(), sDet);
 
 
     var obj = {
       "id": frontendID,
-      "url": platformURL,
+      "url": this.frontendURL,
       "date": this.getDate(),
       "search":{
         "id_hardware": this.selectedSensor,
@@ -145,13 +146,14 @@ export class SearchRequestComponent implements OnInit {
         "finish_date": eDate.toISOString()
       }
     };
-    //this.httpClient.post(`http://${platformURL}/search`,obj);
-    this.httpClient.get("http://127.0.0.1:3000/searchResponse")
+    this.httpClient.post(`http://${platformURL}/search`,obj)
+    //this.httpClient.get("http://127.0.0.1:3000/searchResponse")
       //.pipe(map((reqs: SearchResponse[])=> reqs.map(res => new SearchResponse(res.id, res.url, res.date, res.search,res.data))))
       .subscribe(
         res => {
           console.log(res);
-          var req = res[0];
+          //var req = res[0];
+          let req = res as SearchResponse;
           var dataA: DataEntry[] = new Array();
           console.log(req);
           console.log(req.id);

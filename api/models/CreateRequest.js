@@ -11,6 +11,9 @@ let CreateRequest = new Schema({
     date: {
         type: String
     },
+    idEvento:{
+        type:String
+    },
     create: {
         type: Object
     }
