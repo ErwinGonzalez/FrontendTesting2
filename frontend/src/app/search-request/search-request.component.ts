@@ -8,6 +8,7 @@ import { InfoResponseService } from '../services/inforesponse.service';
 import { SearchRequestService } from '../services/searchrequest.service';
 import { SearchresponseService } from '../services/searchresponse.service';
 import { ToastrService } from 'ngx-toastr';
+import * as myGlobal from '../globals';
 
 import DataEntry from './classes/DataEntry';
 import SearchDetails from './classes/SearchDetails';
@@ -27,10 +28,11 @@ export class SearchRequestComponent implements OnInit {
   infoResponses = [];
   selectedPlatform = "";
   platURL = "192.165.0.1";
-  frontendID = "CCVIII-FE";
   selectedSensor = "Select a Hardware";
   platformHardware = [];
-  frontendURL="192.168.1.14";
+  
+  frontendID = myGlobal.FrontendName;
+  frontendURL = myGlobal.FrontendIP;
 
 
   constructor(private fb: FormBuilder, private httpClient: HttpClient, private irp: InfoResponseService, private srs: SearchRequestService, private srpns: SearchresponseService, private toastr: ToastrService) { }
@@ -121,8 +123,8 @@ export class SearchRequestComponent implements OnInit {
     console.log(startDate);
 
 
-    var sDate = new Date(startDate.year, startDate.month, startDate.day, startTime.hour, startTime.minute, startTime.second);
-    var eDate = new Date(endDate.year, endDate.month, endDate.day, endTime.hour, endTime.minute, endTime.second);
+    var sDate = new Date(startDate.year, startDate.month-1, startDate.day, startTime.hour, startTime.minute, startTime.second);
+    var eDate = new Date(endDate.year, endDate.month-1, endDate.day, endTime.hour, endTime.minute, endTime.second);
     var sDet = new SearchDetails(this.selectedSensor, sDate.toISOString(), eDate.toISOString());
     var sReq = new SearchRequest(
       frontendID,
@@ -146,6 +148,7 @@ export class SearchRequestComponent implements OnInit {
         "finish_date": eDate.toISOString()
       }
     };
+    console.log(obj);
     this.httpClient.post(`http://${platformURL}/search`,obj)
     //this.httpClient.get("http://127.0.0.1:3000/searchResponse")
       //.pipe(map((reqs: SearchResponse[])=> reqs.map(res => new SearchResponse(res.id, res.url, res.date, res.search,res.data))))

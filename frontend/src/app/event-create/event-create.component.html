@@ -46,7 +46,7 @@
             </div>
             <div>
                 <label class="col-md-4">Frequency </label>
-                <input type="text" class="form-control" formControlName="UpdateFrequency" #UpdateFrequency />
+                <input type="text" class="form-control" formControlName="UpdateFrequency" value={{targetFrequency}} #UpdateFrequency />
             </div>
             <hr />
             <p>If Condition</p>
@@ -63,11 +63,11 @@
             <p>If-Right</p>
             <div class="form-group">
                 <label class="col-md-4">Sensor</label>
-                <input type="text" class="form-control" formControlName="SensorValue" #SensorID />
+                <input type="text" class="form-control" formControlName="SensorValue" #SensorID placeholder="Sensor must be a number between 0 and 1023" />
             </div>
             <div class="form-group">
                 <label class="col-md-4">Status</label>
-                <input type="text" class="form-control" formControlName="SensorStatus" #SensorStatus />
+                <input type="text" class="form-control" formControlName="SensorStatus" #SensorStatus placeholder="Status must be true or false"/>
             </div>
             <div class="form-group">
                 <label class="col-md-4">Frequency</label>
@@ -82,7 +82,7 @@
             <p>If-Then</p>
             <div class="form-group">
                 <label class="col-md-4">Status</label>
-                <input type="text" class="form-control" formControlName="SensorStatusThen" #SensorStatusThen />
+                <input type="text" class="form-control" formControlName="SensorStatusThen" #SensorStatusThen placeholder="Status must be true or false" />
             </div>
             <div class="form-group">
                 <label class="col-md-4">Frequency</label>
@@ -110,7 +110,7 @@
             <p>If-Else</p>
             <div class="form-group">
                 <label class="col-md-4">Status</label>
-                <input type="text" class="form-control" formControlName="SensorStatusElse" #SensorStatusElse />
+                <input type="text" class="form-control" formControlName="SensorStatusElse" #SensorStatusElse placeholder="Status must be true or false"/>
             </div>
             <div class="form-group">
                 <label class="col-md-4">Frequency</label>

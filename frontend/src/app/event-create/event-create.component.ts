@@ -6,7 +6,7 @@ import InfoResponse from '../info-request/classes/InfoResponse';
 import { CreaterequestService } from '../services/createrequest.service';
 import { CreateresponseService } from '../services/createresponse.service';
 import { ToastrService } from 'ngx-toastr';
-
+import * as myGlobal from '../globals';
 
 @Component({
   selector: 'app-event-create',
@@ -16,7 +16,8 @@ import { ToastrService } from 'ngx-toastr';
 export class EventCreateComponent implements OnInit {
 
   angForm: FormGroup;
-  frontendID = "CCVIII-FE";
+  frontendID = myGlobal.FrontendName;
+  frontendURL = myGlobal.FrontendIP;
 
   platformsList = [];
   selectedPlatform = "";
@@ -213,7 +214,7 @@ export class EventCreateComponent implements OnInit {
       "left": {
         "url": this.ifPlatformURL,
         "id": this.selectedHardware,
-        "freq": this.updateFrequency
+        "freq": this.angForm.controls.UpdateFrequency.value
       },
       "condition": this.conditionSelect,
       "right": {
@@ -243,21 +244,22 @@ export class EventCreateComponent implements OnInit {
       "else": elseStmt
     };
 
-    /*var obj = {
+    var obj = {
       "id":this.frontendID,
-      "url":this.destinationPlatformURL,
+      "url":this.frontendURL,
       "date":this.getDate(),
       "create":create
     };
-    this.httpClient.post(´${destinationUrl}/create´,obj);
-    */
+    console.log(obj);
 
     
-    this.httpClient.get("http://127.0.0.1:3000/createResponses")
+    //this.httpClient.get("http://127.0.0.1:3000/createResponses")
+    this.httpClient.post(`http://${this.destinationPlatformURL}/create`,obj)
       .subscribe(
         res => {
           console.log(res);
-          var req = res[0];
+          var req = res;
+          
           var responseFields: String[] = Object.values(req);
           console.log(responseFields);
           this.crp.addRequest(responseFields[0], responseFields[1], responseFields[2], responseFields[3], responseFields[4]);

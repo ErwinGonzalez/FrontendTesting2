@@ -9,6 +9,7 @@ import Hardware from './classes/Hardware';
 import InfoRequest from './classes/InfoRequest';
 import InfoResponse from './classes/InfoResponse';
 import { ToastrService } from 'ngx-toastr';
+import * as myGlobal from '../globals';
 
 @Component({
   selector: 'app-info-request',
@@ -28,8 +29,8 @@ export class InfoRequestComponent implements OnInit {
 
   createForm() {
     this.angForm = this.fb.group({
-      FrontendID: ['', Validators.required],
-      PlatformURL: ['localhost:3000', Validators.required],
+      FrontendID: [myGlobal.FrontendName, Validators.required],
+      PlatformURL: ['', Validators.required],
       RequestDateTime: [{ value: this.getDate(), disabled: true }]
     });
   }
@@ -82,7 +83,7 @@ export class InfoRequestComponent implements OnInit {
           }
           req.hardware = hardwareList
           console.log(req);
-
+          
           let infoResponses = [];
           this.irp.getRequests().subscribe(
             res => {
@@ -105,13 +106,14 @@ export class InfoRequestComponent implements OnInit {
                 return element.id == req.id;
               });
 
+              
               console.log(exists);
               this.showSuccess(req.id,req.url);
               if(exists){
                 console.log(_id);
-                this.irp.update(req.id,req.url,req.date,req.hardware,_id);
+                this.irp.update(req.id,platformURL,req.date,req.hardware,_id);
               }else{
-                this.irp.addRequest(req.id,req.url,req.date,req.hardware);
+                this.irp.addRequest(req.id,platformURL,req.date,req.hardware);
               }
             }
           );

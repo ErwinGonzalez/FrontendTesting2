@@ -7,6 +7,7 @@ import { InfoResponseService } from '../services/inforesponse.service';
 import { ToastrService } from 'ngx-toastr';
 import InfoResponse from '../info-request/classes/InfoResponse';
 import ChangeResponse from './classes/ChangeResponse';
+import * as myGlobal from '../globals';
 
 @Component({
   selector: 'app-change-request',
@@ -21,13 +22,13 @@ export class ChangeRequestComponent implements OnInit {
   requestsHardware = [];
   platformHardware = [];
   selectedPlatform = "Select a Platform";
-  frontendID = "CCVIII-FE";
+  frontendID = myGlobal.FrontendName;
   selectedSensor = "Select a Hardware";
   hardwareList = [];
   hardware;
   hardwareType;
   platUrl = "192.165.0.1";
-  frontendURL = "192.168.1.14";
+  frontendURL = myGlobal.FrontendIP;
 
   constructor(private fb: FormBuilder, private httpClient: HttpClient, private crs: ChangeRequestService, private irp: InfoResponseService, private crps: ChangeResponseService, private toastr: ToastrService) { }
 
