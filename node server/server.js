@@ -5,28 +5,28 @@ const app = express()
 app.use(bodyparser.json())
 app.use(cors())
 
-var iphardware ="192.168.3.4";
-var ipPlataforma="192.168.1.1";
+var iphardware = "192.168.3.4";
+var ipPlataforma = "192.168.1.1";
 
-var mysql      = require('mysql');
+var mysql = require('mysql');
 var connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : '',
-  database : 'temp'
-  
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'temp'
+
 });
 
 app.post('/datos', function (req, res) {
   console.log(req.body);
-  let now= new Date();
+  let now = new Date();
   var fecha_formato = now.toJSON();
   //"2017-09-15T12:30:28.757Z"
-  var fechamsq = fecha_formato.substring(0,10);
-  var horamsq = fecha_formato.substring(11,19);
-  
+  var fechamsq = fecha_formato.substring(0, 10);
+  var horamsq = fecha_formato.substring(11, 19);
 
-  var datetime = fechamsq + " "+horamsq;
+
+  var datetime = fechamsq + " " + horamsq;
   console.log(datetime);
   var temp = req.query.Temperatura;
   var hum = req.query.Humedad;
@@ -35,36 +35,36 @@ app.post('/datos', function (req, res) {
   //console.log("temperatura: " + temp + " humedad: " + hum +"   fecha/hora:"+now);
   //meter a la base de datos conforme van llegando
   //connection.connect();
-  let consulta = 'INSERT INTO `iot`(temperatura,humedad,frecuencia,status,fecha) VALUES('+temp+","+hum+","+freq+","+estado+",\'"+datetime+'\')';
-   connection.query(consulta, function(err, rows, fields) {
-     if (err) throw err;
-     return;
-   });
-  
+  let consulta = 'INSERT INTO `iot`(temperatura,humedad,frecuencia,status,fecha) VALUES(' + temp + "," + hum + "," + freq + "," + estado + ",\'" + datetime + '\')';
+  connection.query(consulta, function (err, rows, fields) {
+    if (err) throw err;
+    return;
+  });
+
   //connection.end();
   //console.log(req.query.Temperatura);
   //console.log(req.query.Humedad);
   //console.log(req.query.Frecuencia);
-res.send("ok");
+  res.send("ok");
 
 });
 //esto va quemado por que no se va a hacer mesh
-app.post('/info',function(req,res) {
+app.post('/info', function (req, res) {
   let event = new Date();
   var fecha = event.toJSON();
 
   console.log(req);
   var date = req.body.date;
-  var s = date.substring(0,date.length-1);
-  var s2 = fecha.substring(0,fecha.length-1);
+  var s = date.substring(0, date.length - 1);
+  var s2 = fecha.substring(0, fecha.length - 1);
 
   let qStmt = "INSERT INTO `info_requests`(`id`, `url`, `date`)";
-  let vStmt = ' VALUES (\''+req.body.id+'\',\''+
-  req.body.url+'\',\''+
-  s+'\')';
+  let vStmt = ' VALUES (\'' + req.body.id + '\',\'' +
+    req.body.url + '\',\'' +
+    s + '\')';
 
   console.log(vStmt);
-  connection.query(qStmt+vStmt);
+  connection.query(qStmt + vStmt);
 
   res.send({
     "id": 'SeVaQuemar!!',
@@ -81,25 +81,25 @@ app.post('/info',function(req,res) {
       }
     }//copiar impares en cuestionario de sp2
   });
-  
+
   qStmt = 'INSERT INTO `info_response`(`id`, `url`, `date`, `id_hardware`, `hardware_tag`, `hardware_type`) ';
-  vStmt = ' VALUES (\'SeVaQuemar!!\',\''+
-    ipPlataforma+'\',\''+
-    s2+'\',\'id01\',\'Termistor\', \'input\')';
-    console.log(vStmt);
-  connection.query(qStmt+vStmt);
-  vStmt = ' VALUES (\'SeVaQuemar!!\',\''+
-  ipPlataforma+'\',\''+
-  s2+'\',\'id02\',\'LED\', \'output\')';
-  connection.query(qStmt+vStmt);
+  vStmt = ' VALUES (\'SeVaQuemar!!\',\'' +
+    ipPlataforma + '\',\'' +
+    s2 + '\',\'id01\',\'Termistor\', \'input\')';
+  console.log(vStmt);
+  connection.query(qStmt + vStmt);
+  vStmt = ' VALUES (\'SeVaQuemar!!\',\'' +
+    ipPlataforma + '\',\'' +
+    s2 + '\',\'id02\',\'LED\', \'output\')';
+  connection.query(qStmt + vStmt);
   console.log("mando algo");
   console.log(req.body);//guardar un log de esto
-  
+
 });
 
-app.post('/change',function (req,res) {
-    const Http = new XMLHttpRequest();
-    const url = 'http://'+iphardware;
+app.post('/change', function (req, res) {
+  const Http = new XMLHttpRequest();
+  const url = 'http://' + iphardware;
   //agregar a la base de datos 
   if (req.body.change.id01) {
     //aqui odo lo que le mande al id01: el sensor de temperatura, humedad
@@ -123,62 +123,62 @@ app.post('/change',function (req,res) {
     if (status02 == false) {
       console.log("hola");
     }
-    
-    
+
+
   }
 
-  
+
   res.send("ok");
- 
-  
+
+
 });
 
 //app.get('/',function(req,res){
-  //res.send("hola,si funciona es arduino el que esta mal");
+//res.send("hola,si funciona es arduino el que esta mal");
 //});
 
-app.post('/create', cors(), function (req,res){
+app.post('/create', cors(), function (req, res) {
   console.log(req.body);
   //connection.query('SELECT * FROM search_response WHERE fecha_res >\''+fecha_inicio+ '\' AND fecha_res <= \''+fecha_final+'\'', function(err, rows, fields) {
-    var date = req.body.date;
-    var s = date.substring(0,date.length-1);
-    let qStmt = 'INSERT INTO `create_req`(`id_fe`, `url`, `date`, `if_l_url`, `if_l_id`, `if_l_freq`, `if_cond`, `if_r_sensor`, `if_r_stat`, `if_r_freq`, `if_r_text`, `then_url`, `then_id`, `then_status`, `then_freq`, `then_text`, `else_url`, `else_id`, `else_status`, `else_freq`, `else_text`) ';
-    let vStmt  = ' VALUES (\''+req.body.id+'\',\''+
-      req.body.url+'\',\''+
-      s+'\',\''+
-      req.body.create.if.left.url+'\',\''+
-      req.body.create.if.left.id+'\','+
-      req.body.create.if.left.freq+',\''+
-      req.body.create.if.condition+'\','+
-      req.body.create.if.right.sensor+','+
-      req.body.create.if.right.status+','+
-      req.body.create.if.right.freq+',\''+
-      req.body.create.if.right.text+'\',\''+
-      req.body.create.then.url+'\',\''+
-      req.body.create.then.id+'\','+
-      req.body.create.then.status+','+
-      req.body.create.then.freq+',\''+
-      req.body.create.then.text+'\',\''+
-      req.body.create.else.url+'\',\''+
-      req.body.create.else.id+'\','+
-      req.body.create.else.status+','+
-      req.body.create.else.freq+',\''+
-      req.body.create.else.text+'\')';
-    console.log(qStmt);
-    console.log(vStmt);
-  connection.query(qStmt+vStmt, function(err, rows, fields){
+  var date = req.body.date;
+  var s = date.substring(0, date.length - 1);
+  let qStmt = 'INSERT INTO `create_req`(`id_fe`, `url`, `date`, `if_l_url`, `if_l_id`, `if_l_freq`, `if_cond`, `if_r_sensor`, `if_r_stat`, `if_r_freq`, `if_r_text`, `then_url`, `then_id`, `then_status`, `then_freq`, `then_text`, `else_url`, `else_id`, `else_status`, `else_freq`, `else_text`) ';
+  let vStmt = ' VALUES (\'' + req.body.id + '\',\'' +
+    req.body.url + '\',\'' +
+    s + '\',\'' +
+    req.body.create.if.left.url + '\',\'' +
+    req.body.create.if.left.id + '\',' +
+    req.body.create.if.left.freq + ',\'' +
+    req.body.create.if.condition + '\',' +
+    req.body.create.if.right.sensor + ',' +
+    req.body.create.if.right.status + ',' +
+    req.body.create.if.right.freq + ',\'' +
+    req.body.create.if.right.text + '\',\'' +
+    req.body.create.then.url + '\',\'' +
+    req.body.create.then.id + '\',' +
+    req.body.create.then.status + ',' +
+    req.body.create.then.freq + ',\'' +
+    req.body.create.then.text + '\',\'' +
+    req.body.create.else.url + '\',\'' +
+    req.body.create.else.id + '\',' +
+    req.body.create.else.status + ',' +
+    req.body.create.else.freq + ',\'' +
+    req.body.create.else.text + '\')';
+  console.log(qStmt);
+  console.log(vStmt);
+  connection.query(qStmt + vStmt, function (err, rows, fields) {
     if (err) throw err;
-    
+
     //connexion a html 
-    var x = function(){
-      return obj = { 
-        'id':'plataforma1',
-        'url':'21.1.4.1',
-        'date':'1989-12-20T07:35:12.457Z',
-        'status':'ok',
-        'idEvent':'EV001'
-         };
-      
+    var x = function () {
+      return obj = {
+        'id': 'plataforma1',
+        'url': '21.1.4.1',
+        'date': '1989-12-20T07:35:12.457Z',
+        'status': 'ok',
+        'idEvent': 'EV001'
+      };
+
     };
 
     let id_res = 'plataforma1';
@@ -187,22 +187,22 @@ app.post('/create', cors(), function (req,res){
     let status_res = 'ok';
     let idEvent_res = 'EV001';
 
-    let s2 = date_res.substring(0,date_res.length-1);
+    let s2 = date_res.substring(0, date_res.length - 1);
     qStmt = 'INSERT INTO `create_response`(`id`, `url`, `date`, `status`, `idEvent`)';
-    vStmt = ' VALUES (\''+id_res+'\',\''+
-            url_res+'\',\''+
-            s2+'\',\''+
-            status_res+'\',\''+
-            idEvent_res+'\')';
+    vStmt = ' VALUES (\'' + id_res + '\',\'' +
+      url_res + '\',\'' +
+      s2 + '\',\'' +
+      status_res + '\',\'' +
+      idEvent_res + '\')';
     console.log(vStmt);
-    connection.query(qStmt+vStmt);
+    connection.query(qStmt + vStmt);
     res.send(x());
   });
-  
+
 });
 
-app.post('/search',function (req,res) {
- 
+app.post('/search', function (req, res) {
+
   console.log(req.body);
 
   let fecha_inicio = req.body.search.start_date;
@@ -211,51 +211,60 @@ app.post('/search',function (req,res) {
   console.log(fecha_final);
 
   let qStmt = 'INSERT INTO `search_req`(`id`, `url`, `date`, `id_hardware`, `start_date`, `finish_date`)';
-  let vStmt = ' VALUES (\''+
-      req.body.id+'\',\''+req.body.url+'\',\''+req.body.date+'\',\''+
-      req.body.search.id_hardware+'\',\''+fecha_inicio+'\',\''+fecha_final+'\')';
+  let vStmt = ' VALUES (\'' +
+    req.body.id + '\',\'' + req.body.url + '\',\'' + req.body.date + '\',\'' +
+    req.body.search.id_hardware + '\',\'' + fecha_inicio + '\',\'' + fecha_final + '\')';
 
-  connection.query('SELECT * FROM iot', function(err, rows, fields) {
-      if(err) throw err;
+  connection.query(qStmt+vStmt);
 
-      var obj = {
-        'id':req.body.id,
-        'url':req.body.url,
-        'date':req.body.date,
-        'search':{
-          'id_hardware':req.body.search.id_hardware,
-          'type':rows[0].type
-        },
-      };
-      
-      var data = {};
-      for (let i = 0; i<rows.length; i++){
-        var f =rows[i].fecha;
-        data[f.toISOString()]={
-            'sensor':rows[i].humedad,
-            'status':rows[i].status,
-            'freq':rows[i].frecuencia,
-            'text':rows[i].texto
+  connection.query('SELECT * FROM iot', function (err, rows, fields) {
+    if (err) throw err;
+
+    let type = rows[0].frecuencia > 0 ? 'input' : 'output';
+    var obj = {
+      'id': req.body.id,
+      'url': req.body.url,
+      'date': req.body.date,
+      'search': {
+        'id_hardware': req.body.search.id_hardware,
+        'type': type
+      },
+    };
+
+    var data = {};
+    for (let i = 0; i < rows.length; i++) {
+      var f = rows[i].fecha;
+      if (type == 'input') {
+        data[f.toISOString()] = {
+          'sensor': rows[i].humedad,
+          'freq': rows[i].frecuencia
+        }
+      } else if (type == 'output') {
+        data[f.toISOString()] = {
+          'status': rows[i].status,
+          'text': rows[i].texto
         }
       }
-      obj['data'] = data;
-    
-      console.log(obj);
-      res.send(obj);
-      var keys = Object.keys(data);
-      var values = Object.values(data);
-      var data_array = [];
-      for(let i = 0; i<keys.length;i++){
-        let d1 = keys[i].substring(0,keys[i].length-1);
-        data_array[i]=[obj.id, obj.url,obj.date,obj.search.id_hardware,obj.search.type,d1,values[i].sensor,values[i].status,values[i].freq,values[i].text];
-      }
-      console.log(data_array);
-      let q = 'INSERT INTO search_response(id,url,fecha_req,id_hard,type,fecha_res,sensor,status,freq,texto) VALUES ?';
-      //let v = '(\''+obj2.id+'\',\''+obj2.url+'\',\''+obj2.date+'\',\''+obj2.search.id_hardware+'\',\''+obj2.search.type+'\',\''+'2019-10-31T08:00:54.000'+'\',\''+100+'\',\''+true+'\',\''+1000+'\',\''+'ok'+'\')';
-      connection.query(q,[data_array]);
+    }
+
+    obj['data'] = data;
+
+    console.log(obj);
+    res.send(obj);
+    var keys = Object.keys(data);
+    var values = Object.values(data);
+    var data_array = [];
+    for (let i = 0; i < keys.length; i++) {
+      let d1 = keys[i].substring(0, keys[i].length - 1);
+      data_array[i] = [obj.id, obj.url, obj.date, obj.search.id_hardware, obj.search.type, d1, values[i].sensor, values[i].status, values[i].freq, values[i].text];
+    }
+    //console.log(data_array);
+    let q = 'INSERT INTO search_response(id,url,fecha_req,id_hard,type,fecha_res,sensor,status,freq,texto) VALUES ?';
+    //let v = '(\''+obj2.id+'\',\''+obj2.url+'\',\''+obj2.date+'\',\''+obj2.search.id_hardware+'\',\''+obj2.search.type+'\',\''+'2019-10-31T08:00:54.000'+'\',\''+100+'\',\''+true+'\',\''+1000+'\',\''+'ok'+'\')';
+    connection.query(q, [data_array]);
   });
   //    connection.query('SELECT * FROM search_response', function(err, rows, fields){
-    
+
 
 });
 
