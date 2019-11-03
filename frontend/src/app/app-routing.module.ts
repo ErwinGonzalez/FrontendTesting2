@@ -6,13 +6,15 @@ import { SearchRequestComponent } from './search-request/search-request.componen
 import { ChangeRequestComponent } from './change-request/change-request.component';
 import { EventCreateComponent } from './event-create/event-create.component';
 import { EventUpdateComponent } from './event-update/event-update.component';
+import { EventDeleteComponent } from './event-delete/event-delete.component';
 
 const routes: Routes = [
   { path: 'info', component: InfoRequestComponent },
   { path: 'search', component: SearchRequestComponent},
   { path: 'change', component: ChangeRequestComponent},
   { path: 'create', component: EventCreateComponent},
-  { path: 'update', component: EventUpdateComponent}
+  { path: 'update', component: EventUpdateComponent},
+  { path: 'delete', component: EventDeleteComponent}
 ];
 
 @NgModule({

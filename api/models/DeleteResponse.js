@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let CreateRequest = new Schema({
+let DeleteResponse = new Schema({
     id: {
         type: String
     },
@@ -11,11 +11,11 @@ let CreateRequest = new Schema({
     date: {
         type: String
     },
-    create: {
-        type: Object
+    status: {
+        type: String
     }
 }, {
-    collection: 'CreateRequest'
+    collection: 'DeleteResponse'
 });
 
-module.exports = mongoose.model('CreateRequest',CreateRequest);
+module.exports = mongoose.model('DeleteResponse',DeleteResponse);

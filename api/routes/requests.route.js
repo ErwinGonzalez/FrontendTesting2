@@ -11,6 +11,9 @@ let ChangeRequest = require('../models/ChangeRequest');
 let ChangeResponse = require('../models/ChangeResponse');
 let CreateRequest = require('../models/CreateRequest');
 let CreateResponse = require('../models/CreateResponse');
+let EventRequest = require('../models/Event');
+let DeleteRequest = require('../models/DeleteRequest');
+let DeleteResponse = require('../models/DeleteResponse');
 
 // Defined store route
 requestRoutes.route('/infoRequest/add').post(function (req, res) {
@@ -236,6 +239,113 @@ requestRoutes.route('/createResponse/add').post(function (req, res) {
 
 requestRoutes.route('/createResponse').get(function (req, res) {
   CreateResponse.find(function (err, requests) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      res.json(requests);
+    }
+  });
+});
+requestRoutes.route('/Events/add').post(function (req, res) {
+
+  let eventRequest = new EventRequest(req.body);
+
+  console.log(eventRequest);
+  eventRequest.save()
+    .then(eventRequest => {
+
+      res.status(200).json({ 'Request': 'Request has been added successfully' });
+    })
+    .catch(err => {
+      res.status(400).send("unable to save to database");
+    });
+});
+
+requestRoutes.route('/Events').get(function (req, res) {
+  EventRequest.find(function (err, requests) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      res.json(requests);
+    }
+  });
+});
+requestRoutes.route('/Events/update/:idEvento').post(function (req, res) {
+  console.log(req.params.idEvento);
+  EventRequest.findById(req.params.idEvento,function (err, response) {
+    if (!response) {
+      res.status(404).send("Not Found");
+    }
+    else {
+      response.id = req.body.id;
+      response.url = req.body.url;
+      response.date = req.body.date;
+      response.event = req.body.event;
+      
+      response.save().then( response => {
+        res.json('Update Complete');
+      }).
+      catch(err=>{
+        res.status(400).send("Unable to update Database");
+      });
+
+    }
+  });
+});
+
+requestRoutes.route('/Events/delete/:id').get(function (req,res){
+  console.log(req.params.id)
+  EventRequest.findByIdAndRemove({_id: req.params.id}, function(err, request){
+    if(err) res.json(err);
+    else res.json('Success');
+  });
+});
+
+requestRoutes.route('/deleteRequest/add').post(function (req, res) {
+
+  let deleteRequest = new DeleteRequest(req.body);
+
+  console.log(deleteRequest);
+  deleteRequest.save()
+    .then(deleteRequest => {
+
+      res.status(200).json({ 'Request': 'Request has been added successfully' });
+    })
+    .catch(err => {
+      res.status(400).send("unable to save to database");
+    });
+});
+
+requestRoutes.route('/deleteResponse').get(function (req, res) {
+  DeleteRequest.find(function (err, requests) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      res.json(requests);
+    }
+  });
+});
+
+requestRoutes.route('/deleteResponse/add').post(function (req, res) {
+
+  let deleteResponse = new DeleteResponse(req.body);
+
+  console.log(deleteResponse);
+  deleteResponse.save()
+    .then(deleteResponse => {
+
+      res.status(200).json({ 'Request': 'Request has been added successfully' });
+    })
+    .catch(err => {
+      res.status(400).send("unable to save to database");
+    });
+});
+
+requestRoutes.route('/deleteResponse').get(function (req, res) {
+  DeleteResponse.find(function (err, requests) {
     if (err) {
       console.log(err);
     }

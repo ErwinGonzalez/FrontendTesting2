@@ -17,6 +17,7 @@ import { InfoRequestComponent } from './info-request/info-request.component';
 import { SearchRequestComponent } from './search-request/search-request.component';
 import { EventCreateComponent } from './event-create/event-create.component';
 import { EventUpdateComponent } from './event-update/event-update.component';
+import { EventDeleteComponent } from './event-delete/event-delete.component';
 
 import { ChangeRequestService } from './services/changerequest.service';
 import { InforequestService } from './services/inforequest.service';
@@ -26,9 +27,6 @@ import { SearchresponseService } from './services/searchresponse.service';
 import { CreateresponseService } from './services/createresponse.service';
 import { CreaterequestService } from './services/createrequest.service';
 
-
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +35,8 @@ import { CreaterequestService } from './services/createrequest.service';
     ChangeRequestComponent,
     EventCreateComponent,
     EventUpdateComponent,
-    EventUpdateComponent
+    EventUpdateComponent,
+    EventDeleteComponent
   ],
   imports: [
     BrowserModule,

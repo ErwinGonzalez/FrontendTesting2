@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let CreateRequest = new Schema({
+let Event = new Schema({
     id: {
         type: String
     },
@@ -11,11 +11,14 @@ let CreateRequest = new Schema({
     date: {
         type: String
     },
-    create: {
+    idEvento:{
+        type:String
+    },
+    event: {
         type: Object
     }
 }, {
-    collection: 'CreateRequest'
+    collection: 'Event'
 });
 
-module.exports = mongoose.model('CreateRequest',CreateRequest);
+module.exports = mongoose.model('Event',Event);

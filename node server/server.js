@@ -139,11 +139,56 @@ app.post('/change', function (req, res) {
 
 app.post('/create', cors(), function (req, res) {
   console.log(req.body);
-  //connection.query('SELECT * FROM search_response WHERE fecha_res >\''+fecha_inicio+ '\' AND fecha_res <= \''+fecha_final+'\'', function(err, rows, fields) {
   var date = req.body.date;
   var s = date.substring(0, date.length - 1);
+  /**
+   * Save the received request
+   */
   let qStmt = 'INSERT INTO `create_req`(`id_fe`, `url`, `date`, `if_l_url`, `if_l_id`, `if_l_freq`, `if_cond`, `if_r_sensor`, `if_r_stat`, `if_r_freq`, `if_r_text`, `then_url`, `then_id`, `then_status`, `then_freq`, `then_text`, `else_url`, `else_id`, `else_status`, `else_freq`, `else_text`) ';
-  let vStmt = ' VALUES (\'' + req.body.id + '\',\'' +
+  let vStmt;
+  var x = function () {
+    return obj = {
+      'id': 'plataforma1',
+      'url': '21.1.4.1',
+      'date': '1989-12-20T07:35:12.457Z',
+      'status': 'ok',
+      'idEvent': 'EV001'
+    };
+
+  };
+
+  let id_res = 'plataforma1';
+  let url_res = '21.1.4.1';
+  let date_res = '1989-12-20T07:35:12.457Z';
+  let status_res = 'ok';
+  let idEvent_res = 'EV001';
+
+  /**
+   * Get the response values and save
+   */
+  let s2 = date_res.substring(0, date_res.length - 1);
+  qStmt = 'INSERT INTO `create_response`(`id`, `url`, `date`, `status`, `idEvent`)';
+  vStmt = ' VALUES (\'' + id_res + '\',\'' +
+    url_res + '\',\'' +
+    s2 + '\',\'' +
+    status_res + '\',\'' +
+    idEvent_res + '\')';
+  
+  console.log(vStmt);
+  connection.query(qStmt + vStmt);
+  //SEND back the response
+  res.send(x());
+  /**
+   * TODO complete the IFs, 
+   * requests should not contain all fields,
+   * i.e. an output should not contain a value or a frequency
+   * an input should not contain status or text
+   */
+  /**
+   * Main part of the if
+   */
+  if(req.body.create.if.right.sensor > 0){
+    vStmt = ' VALUES (\'' + req.body.id + '\',\'' +
     req.body.url + '\',\'' +
     s + '\',\'' +
     req.body.create.if.left.url + '\',\'' +
@@ -164,40 +209,27 @@ app.post('/create', cors(), function (req, res) {
     req.body.create.else.status + ',' +
     req.body.create.else.freq + ',\'' +
     req.body.create.else.text + '\')';
+  }
+  /**Then part of the if */
+  if(req.body.create.then.freq > 0){
+
+  }
+  /**Else part of the if */
+  if(req.body.create.else.freq > 0){
+    
+  }
+  
   console.log(qStmt);
   console.log(vStmt);
-  connection.query(qStmt + vStmt, function (err, rows, fields) {
-    if (err) throw err;
+  // Save the request
+  connection.query(qStmt + vStmt); 
+    
 
-    //connexion a html 
-    var x = function () {
-      return obj = {
-        'id': 'plataforma1',
-        'url': '21.1.4.1',
-        'date': '1989-12-20T07:35:12.457Z',
-        'status': 'ok',
-        'idEvent': 'EV001'
-      };
-
-    };
-
-    let id_res = 'plataforma1';
-    let url_res = '21.1.4.1';
-    let date_res = '1989-12-20T07:35:12.457Z';
-    let status_res = 'ok';
-    let idEvent_res = 'EV001';
-
-    let s2 = date_res.substring(0, date_res.length - 1);
-    qStmt = 'INSERT INTO `create_response`(`id`, `url`, `date`, `status`, `idEvent`)';
-    vStmt = ' VALUES (\'' + id_res + '\',\'' +
-      url_res + '\',\'' +
-      s2 + '\',\'' +
-      status_res + '\',\'' +
-      idEvent_res + '\')';
-    console.log(vStmt);
-    connection.query(qStmt + vStmt);
-    res.send(x());
-  });
+    /**
+     * TODO connect to the hardware and create the event
+     */
+    
+  
 
 });
 
@@ -205,11 +237,13 @@ app.post('/search', function (req, res) {
 
   console.log(req.body);
 
+  //TODO obtain the correct dates, from ISO format
   let fecha_inicio = req.body.search.start_date;
   let fecha_final = req.body.search.finish_date;
   console.log(fecha_inicio);
   console.log(fecha_final);
 
+  //Save the request
   let qStmt = 'INSERT INTO `search_req`(`id`, `url`, `date`, `id_hardware`, `start_date`, `finish_date`)';
   let vStmt = ' VALUES (\'' +
     req.body.id + '\',\'' + req.body.url + '\',\'' + req.body.date + '\',\'' +
@@ -217,9 +251,11 @@ app.post('/search', function (req, res) {
 
   connection.query(qStmt+vStmt);
 
+  //Obtain the selected data
   connection.query('SELECT * FROM iot', function (err, rows, fields) {
     if (err) throw err;
 
+    //Determine if the request is an input or an output
     let type = rows[0].frecuencia > 0 ? 'input' : 'output';
     var obj = {
       'id': req.body.id,
@@ -231,7 +267,12 @@ app.post('/search', function (req, res) {
       },
     };
 
+    
     var data = {};
+    /**
+     * If it's an input it should return it's sensor value and frequency
+     * If it's an output it should return it's status and text keyword
+     */
     for (let i = 0; i < rows.length; i++) {
       var f = rows[i].fecha;
       if (type == 'input') {
@@ -247,6 +288,7 @@ app.post('/search', function (req, res) {
       }
     }
 
+    //Format the response data
     obj['data'] = data;
 
     console.log(obj);
@@ -254,11 +296,16 @@ app.post('/search', function (req, res) {
     var keys = Object.keys(data);
     var values = Object.values(data);
     var data_array = [];
+    /**
+     * Create SQL friendly data objects
+     */
     for (let i = 0; i < keys.length; i++) {
       let d1 = keys[i].substring(0, keys[i].length - 1);
       data_array[i] = [obj.id, obj.url, obj.date, obj.search.id_hardware, obj.search.type, d1, values[i].sensor, values[i].status, values[i].freq, values[i].text];
     }
-    //console.log(data_array);
+    /**
+     * Insert the data responses into the SQL database
+     */
     let q = 'INSERT INTO search_response(id,url,fecha_req,id_hard,type,fecha_res,sensor,status,freq,texto) VALUES ?';
     //let v = '(\''+obj2.id+'\',\''+obj2.url+'\',\''+obj2.date+'\',\''+obj2.search.id_hardware+'\',\''+obj2.search.type+'\',\''+'2019-10-31T08:00:54.000'+'\',\''+100+'\',\''+true+'\',\''+1000+'\',\''+'ok'+'\')';
     connection.query(q, [data_array]);
@@ -269,5 +316,5 @@ app.post('/search', function (req, res) {
 });
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('IoT server listening on port 3000!');
 });
