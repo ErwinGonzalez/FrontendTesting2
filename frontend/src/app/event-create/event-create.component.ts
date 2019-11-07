@@ -61,7 +61,6 @@ export class EventCreateComponent implements OnInit {
   createForm() {
     this.angForm = this.fb.group({
       FrontendID: [this.frontendID, Validators.required],
-      DestinationPlatformSelect: [null, Validators.required],
       DestinationPlatformURL: [{ value: '', disabled: true }, Validators.required],
       PlatformSelect: [null, Validators.required],
       HardwareSelect: ['-1', [Validators.required, Validators.min(0)]],

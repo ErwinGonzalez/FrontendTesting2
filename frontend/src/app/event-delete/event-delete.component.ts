@@ -127,53 +127,11 @@ export class EventDeleteComponent implements OnInit {
 
   changeSelectedEvent(event: any) {
     console.log(event.target.id);
-
-    this.selectedEvent = event.target.value;
-
-    console.log(this.eventsList);
-
-    this.eventsUrlList = [];
-
-    for (let ev of this.eventsList) {
-      if (ev.idEvento == event.target.value)
-        this.eventsUrlList.push(ev.url);
-    }
-
-    if (this.eventsUrlList.length > 1) {
-      this.angForm.controls.EventPlatformSelect.setValidators([Validators.required]);
-    } else {
-      this.angForm.controls.EventPlatformSelect.clearValidators();
-    }
-
-    if (this.eventsUrlList.length == 1) {
-      let sE = this.selectedEvent;
-      var ev = this.eventsList.find(function (element) {
-        if (element.idEvento == sE)
-          return element._id;
-      });
-      console.log(ev._id);
-      this.updateForm(ev._id);
-    }
-  }
-
-  changeSelectedEventPlatform(event: any) {
     console.log(event.target.value);
-    this.selectedUrl = event.target.value;
-    let eventID;
-
-    for (let ev of this.eventsList) {
-      console.log(ev);
-      if (ev.idEvento == this.selectedEvent && ev.url == this.selectedUrl)
-        eventID = ev._id;
-    }
-    console.log(eventID);
-    this.updateForm(eventID);
-  }
-
-  updateForm(eventID){
-    this.eventUpdateID = eventID;
+  
+    this.eventUpdateID = event.target.value;
     var ev = this.eventsList.find(function (element) {
-      if (element._id == eventID)
+      if (element._id == event.target.value)
         return element._id;
     });
     this.selectedUrl = ev.url

@@ -1,4 +1,3 @@
-<p>event-delete works!</p>
 <div class="card">
     <div class="card-body">
         <form [formGroup]="angForm" novalidate>
@@ -6,15 +5,10 @@
                 <div class="form-group col-md-4">
                     <select class="form-control" formControlName="EventSelection" id="EventSelection" (change)=changeSelectedEvent($event)>
                         <option [ngValue]=null disabled>Select an Event</option>
-                        <option *ngFor="let event of eventsList" value={{event.idEvento}}>{{event.idEvento}}</option>
+                        <option *ngFor="let event of eventsList" value={{event._id}}>{{event.idEvento}}</option>
                     </select>
                 </div>
-                <div class="form-group col-md-4" *ngIf = 'eventsUrlList.length > 0'>
-                    <select class="form-control" formControlName="EventPlatformSelect" id="EventPlatformSelect" (change)=changeSelectedEventPlatform($event)>
-                        <option [ngValue]=null disabled>Select an Event</option>
-                        <option *ngFor="let url of eventsUrlList" value={{url}}>{{url}}</option>
-                    </select>
-                </div>
+                
             </div>
             <div class="form-group">
                 <label class="col-md-4">Frontend ID</label>
