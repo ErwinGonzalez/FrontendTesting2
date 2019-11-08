@@ -26,10 +26,11 @@ export class EventService {
     return this.httpClient.get(`${this.uri}/Events`);
   }
 
-  updateRequest(updateID){
-
-    let obj ={};
-    this.httpClient.post(`${this.uri}/Events/update/${updateID}`,obj)
+  updateRequest(updateID, update){
+    this.httpClient.post(`${this.uri}/Events/update/${updateID}`,update)
+    .subscribe(
+      res=>console.log(res)
+    );
   }
 
   deleteEvent(id){

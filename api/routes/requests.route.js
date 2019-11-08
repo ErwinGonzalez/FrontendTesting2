@@ -14,6 +14,8 @@ let CreateResponse = require('../models/CreateResponse');
 let EventRequest = require('../models/Event');
 let DeleteRequest = require('../models/DeleteRequest');
 let DeleteResponse = require('../models/DeleteResponse');
+let UpdateRequest = require('../models/UpdateRequest');
+let UpdateResponse = require('../models/UpdateResponse');
 
 // Defined store route
 requestRoutes.route('/infoRequest/add').post(function (req, res) {
@@ -272,9 +274,9 @@ requestRoutes.route('/Events').get(function (req, res) {
     }
   });
 });
-requestRoutes.route('/Events/update/:idEvento').post(function (req, res) {
-  console.log(req.params.idEvento);
-  EventRequest.findById(req.params.idEvento,function (err, response) {
+requestRoutes.route('/Events/update/:_id').post(function (req, res) {
+  console.log(req.params._id);
+  EventRequest.findById(req.params._id,function (err, response) {
     if (!response) {
       res.status(404).send("Not Found");
     }
@@ -303,13 +305,65 @@ requestRoutes.route('/Events/delete/:id').get(function (req,res){
   });
 });
 
-requestRoutes.route('/deleteRequest/add').post(function (req, res) {
+requestRoutes.route('/updateRequest/add').post(function (req, res) {
 
-  let deleteRequest = new DeleteRequest(req.body);
+  let updateRequest = new UpdateRequest(req.body);
 
-  console.log(deleteRequest);
-  deleteRequest.save()
-    .then(deleteRequest => {
+  console.log(updateRequest);
+  updateRequest.save()
+    .then(updateRequest => {
+
+      res.status(200).json({ 'Request': 'Request has been added successfully' });
+    })
+    .catch(err => {
+      res.status(400).send("unable to save to database");
+    });
+});
+
+requestRoutes.route('/updateRequest').get(function (req, res) {
+  UpdateRequest.find(function (err, requests) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      res.json(requests);
+    }
+  });
+});
+
+requestRoutes.route('/updateResponse/add').post(function (req, res) {
+
+  let updateResponse = new UpdateResponse(req.body);
+
+  console.log(updateResponse);
+  updateResponse.save()
+    .then(updateResponse => {
+
+      res.status(200).json({ 'Response': 'Response has been added successfully' });
+    })
+    .catch(err => {
+      res.status(400).send("unable to save to database");
+    });
+});
+
+requestRoutes.route('/updateResponse').get(function (req, res) {
+  UpdateResponse.find(function (err, requests) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      res.json(requests);
+    }
+  });
+});
+
+requestRoutes.route('/deleteResponse/add').post(function (req, res) {
+
+  let deleteResponse = new DeleteResponse(req.body);
+
+  console.log(deleteResponse);
+  deleteResponse.save()
+    .then(deleteResponse => {
 
       res.status(200).json({ 'Request': 'Request has been added successfully' });
     })
@@ -319,7 +373,7 @@ requestRoutes.route('/deleteRequest/add').post(function (req, res) {
 });
 
 requestRoutes.route('/deleteResponse').get(function (req, res) {
-  DeleteRequest.find(function (err, requests) {
+  DeleteResponse.find(function (err, requests) {
     if (err) {
       console.log(err);
     }

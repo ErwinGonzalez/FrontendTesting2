@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { InfoResponseService } from '../services/inforesponse.service';
-import InfoResponse from '../info-request/classes/InfoResponse';
-import { CreaterequestService } from '../services/createrequest.service';
-import { CreateresponseService } from '../services/createresponse.service';
 import { ToastrService } from 'ngx-toastr';
 import * as myGlobal from '../globals';
 import { EventService } from '../services/events.service';
