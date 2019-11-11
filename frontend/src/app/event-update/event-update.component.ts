@@ -636,17 +636,18 @@ export class EventUpdateComponent implements OnInit {
     console.log(ev);
     if (Object.keys(update).length > 1) {
       console.log('update can be done')
-      //this.ureqs.addRequest(ev.id,ev.url,ev.date,update)
+      this.ureqs.addRequest(ev.id,ev.url,ev.date,update)
       this.httpClient.post(`${ev.url}/update`,ev)
       .subscribe(
         res =>{
           var responseFields = Object.values(res);
-          this.ures.addRequest(responseFields[0],responseFields[1],responseFields[2],responseFields[3])
+          //
           if(responseFields[3].toLowerCase() == 'ok'){
             this.ures.addRequest(responseFields[0],responseFields[1],responseFields[2],responseFields[3])      
             this.eventsrv.updateRequest(evento._id,evento)
           }else{
             //TODO desplegar mensaje de error
+            this.ures.addRequest(responseFields[0],responseFields[1],responseFields[2],responseFields[3])
           }
         }
       )
