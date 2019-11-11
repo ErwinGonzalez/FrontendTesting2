@@ -44,8 +44,8 @@ export class ChangeRequestComponent implements OnInit {
       RequestDateTime: [{ value: this.getDate(), disabled: true }],
       PlatformSelect: [null, Validators.required],
       HardwareSelect: [null, Validators.required],
-      SensorStatus: ['', Validators.required],
-      SensorFrequency: ['', Validators.required],
+      SensorStatus: '',
+      SensorFrequency: '',
       SensorText: ''
     });
   }
@@ -103,12 +103,20 @@ export class ChangeRequestComponent implements OnInit {
     this.hardwareType = this.hardware.detail.type;
     if (this.hardwareType == 'output') {
       this.angForm.controls.SensorText.setValidators([Validators.required]);
-      this.angForm.controls.SensorText.setValue('');
+      this.angForm.controls.SensorStatus.setValidators([Validators.required]);
+      this.angForm.controls.SensorFrequency.clearValidators();
+      this.angForm.controls.SensorText.updateValueAndValidity();
+      this.angForm.controls.SensorStatus.updateValueAndValidity();
+      this.angForm.controls.SensorFrequency.updateValueAndValidity();
     }
     if (this.hardwareType == 'input'){
-      this.angForm.controls.SensorText.setValidators([]);
-      this.angForm.controls.SensorText.setValue(' ');
       this.angForm.controls.SensorText.clearValidators();
+      this.angForm.controls.SensorStatus.clearValidators();
+      this.angForm.controls.SensorFrequency.setValidators([Validators.required,Validators.min(0)]);
+      this.angForm.controls.SensorText.updateValueAndValidity();
+      this.angForm.controls.SensorStatus.updateValueAndValidity();
+      this.angForm.controls.SensorFrequency.updateValueAndValidity();
+      
     }
   }
 
